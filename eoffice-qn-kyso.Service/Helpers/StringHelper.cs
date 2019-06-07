@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     public class StringHelper
-    {
+    { 
         public static String ConvertInputToOutput(string fileName)
         {
             var result = string.Empty;
@@ -18,6 +18,16 @@
             {
                 result = fileName;
             }
+
+            return result;
+        }
+
+        public static String ConvertFileNameFromWordToPdf(string fileName)
+        {
+            var result = string.Empty;
+
+            string[] arrStr = fileName.Split('.');
+            result = String.Concat(arrStr[0], ".", "pdf");
 
             return result;
         }

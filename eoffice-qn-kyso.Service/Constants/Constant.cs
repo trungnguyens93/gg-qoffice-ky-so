@@ -8,6 +8,12 @@
     {
         public static String FontText = "";
 
+        public static readonly string SO = "#So";
+        public static readonly string KY_HIEU_VAN_BAN = "#KyHieu";
+        public static readonly string DIA_DIEM = "#DiaDiemBanHanh";
+        public static readonly string NGAY_BAN_HANH = "#NgayBanHanh";
+        public static readonly string CHU_KY_CO_DAU = "#ChuKyCoDau";
+
         public static List<LoaiChuKy> CreateStaticResource()
         {
             List<LoaiChuKy> loaiChuKys = new List<LoaiChuKy>();
@@ -16,7 +22,6 @@
             loaiChuKys.Add(new LoaiChuKy() { STT = 3, TenLoaiChiDao = "Địa điểm ban hành", MaDacBiet = "#DiaDiemBanHanh" });
             loaiChuKys.Add(new LoaiChuKy() { STT = 4, TenLoaiChiDao = "Ngày ban hành", MaDacBiet = "#NgayBanHanh" });
             loaiChuKys.Add(new LoaiChuKy() { STT = 5, TenLoaiChiDao = "Chũ ký có dấu", MaDacBiet = "#ChuKyCoDau" });
-            loaiChuKys.Add(new LoaiChuKy() { STT = 6, TenLoaiChiDao = "Chũ ký nháy", MaDacBiet = "#ChuKyNhay" });
 
             return loaiChuKys;
         }

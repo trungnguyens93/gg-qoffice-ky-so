@@ -34,6 +34,15 @@
     <Reference Include="edXMLConverter">
       <HintPath>packages\edXMLConverter.dll</HintPath>
     </Reference>
+    <Reference Include="Spire.Doc, Version=7.5.9.4046, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spire.Doc.7.5.9\lib\net46\Spire.Doc.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.License, Version=1.3.7.46, Culture=neutral, PublicKeyToken=b1144360237c8b3f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spire.Doc.7.5.9\lib\net46\Spire.License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Pdf, Version=5.5.13.18046, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spire.Doc.7.5.9\lib\net46\Spire.Pdf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -51,6 +60,8 @@
   <ItemGroup>
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="Enums\MaDacBietEnum.cs" />
+    <Compile Include="Helpers\FileHelper.cs" />
+    <Compile Include="Helpers\FolderHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
@@ -60,6 +71,8 @@
     <Compile Include="TextExtractions\LocationTextExtractionStrategyEx.cs" />
     <Compile Include="TextExtractions\RectAndText.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

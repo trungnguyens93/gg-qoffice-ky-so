@@ -1,9 +1,19 @@
 ﻿namespace eoffice_qn_kyso.CommonServer
 {
+    using eoffice_qn_kyso.App.Models.Dto;
+    using eoffice_qn_kyso.App.Models.Dto.Command;
+    using eoffice_qn_kyso.App.Models.Include;
+    using eoffice_qn_kyso.App.ViewModels;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using RestSharp;
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.IO;
     using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
 
     public class FTPClientConnector
     {
@@ -22,37 +32,6 @@
             this.FtpServerFolder = ConfigurationManager.AppSettings.Get("ftpServerFolder");
             this.FtpClientRootFolder = ConfigurationManager.AppSettings.Get("ftpClientRootFolder");
             this.FtpClientFolder = ConfigurationManager.AppSettings.Get("ftpClientFolder");
-        }
-
-        public void CreateTempFolder()
-        {
-            DirectoryInfo directoryInfo = Directory.CreateDirectory(FtpClientRootFolder + FtpClientFolder);
-            directoryInfo.CreateSubdirectory("input");
-            directoryInfo.CreateSubdirectory("output");
-            directoryInfo.CreateSubdirectory("image");
-        }
-
-        public void DeleteTempFolder()
-        {
-            DirectoryInfo directoryInfo = new DirectoryInfo(this.FtpClientRootFolder);
-
-            foreach (var folder in directoryInfo.GetDirectories())
-            {
-                if (folder.Name.Equals(this.FtpClientFolder))
-                {
-                    foreach (var folder2 in folder.GetDirectories())
-                    {
-                        foreach (var file in folder2.GetFiles())
-                        {
-                            file.Delete();
-                        }
-
-                        folder2.Delete();
-                    }
-
-                    folder.Delete();
-                }
-            }
         }
 
         public bool UploadFile(string fileName)
@@ -87,6 +66,86 @@
             }
         }
 
+        public bool UpdateFileWithApi(string fileName, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
+        {
+            try
+            {
+                byte[] bytes = File.ReadAllBytes(this.FtpClientRootFolder + this.FtpClientFolder + "\\" + "output" + "\\" + fileName);
+
+                var restClient = new RestClient("https://dev-file-qn.eoffice.greenglobal.vn");
+                var request = new RestSharp.RestRequest("api/file/upload", Method.POST);
+                request.AddHeader("Authorization", "Bearer " + token);
+                request.AddFile("multipart/form-data", bytes, fileName);
+
+                IRestResponse response = restClient.Execute(request);
+
+                if (response.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
+                {
+                    JObject obj = JObject.Parse(response.Content);
+
+                    var uploadResult = (JArray)obj.SelectToken("result");
+                    
+                    var fileUploadInfos = JsonConvert.DeserializeObject<List<FileUploadInfoDto>>(uploadResult.ToString());
+
+                    // Create Object for 
+                    var fileDuThao = new FileDuThaoInclude
+                    {
+                        FileId = fileUploadInfos[0].Id
+                    };
+
+                    var xuLy = new XyLyInclude
+                    {
+                        FileDuThao = fileDuThao,
+                        LaKySo = true,
+                        Ma = "DONG_Y",
+                        YKien = yKien
+                    };
+
+                    var updateXuLyDuThao = new UpdateXuLyDuThaoCmd
+                    {
+                        HoSoCongViecId = Convert.ToInt64(hscvId),
+                        XuLy = xuLy
+                    };
+                    
+                    // Call api for updating du thao
+                    var updateThongTinDuThaoResult = this.UpdateThongTinDuThao(duThaoId, chucDanhId, updateXuLyDuThao, token);
+
+                    if (updateThongTinDuThaoResult)
+                    {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool UpdateThongTinDuThao(string duThaoId, string chucDanhId, UpdateXuLyDuThaoCmd command, string token)
+        {
+            // Thieu chucDanhId
+
+            var restClient = new RestClient("https://dev-api-qn.eoffice.greenglobal.vn/ho-so-cong-viec/");
+            var request = new RestSharp.RestRequest($"api/ho-so-cong-viec/du-thao/{duThaoId}/xu-ly", Method.PUT);
+            request.AddHeader("X-API-VERSION", "1");
+            request.AddHeader("Authorization", "Bearer " + token);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("chuc-danh-id", chucDanhId);
+            request.AddJsonBody(JsonConvert.SerializeObject(command));
+
+            IRestResponse response = restClient.Execute(request);
+
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public bool DownloadFile(string fileName)
         {
             try
@@ -109,7 +168,22 @@
             }
             catch
             {
-                throw;
+                return false;
+            }
+        }
+
+        public bool DownloadFileWithApi(string url)
+        {
+            try
+            {
+                var client = new RestClient(url);
+
+
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

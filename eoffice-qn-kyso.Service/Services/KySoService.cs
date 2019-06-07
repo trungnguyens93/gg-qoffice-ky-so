@@ -9,7 +9,7 @@
 
     public class KySoService
     {
-        public bool SignB(string folderName, string fileName, string maDacBiet, string noiDung, int soChuKyNhayDaCo)
+        public bool Sign(string folderName, string fileName, string maDacBiet, string noiDung)
         {
             VGCACrypto.Authorization.SetKey("TTBNNVFUQkJNakV0UWtJd05DMDBPVFJHTFRnMU1qZ3RNVVk0UkRsQk1EZzVPRFkyZkRZek56QTRNVFU1TXpVNU5EUTVPREU1Tnc9PXxkalZVQUNUbFdQbGZOS3RYOElsLzN1Vi84d1lYVldONk12eXA2Mjg4eXA5TmZhWVFXOHBlbVlQUTlIUGZNdk9oSXNCdWJwc0duMEZSMVM2cDhsbDEwSjI3bjcwajhLM1hzcmdKa1FYdmpHVDJSaDB6SkRteHF1Q24wNVVzQzJnSW14OG1tSGRoQjFaYjNGTHpNNFl4VEdlVXphd2FhNmZGZUp0WlFHc28ydENQZGpOQndxYVdEUmhDdGEvSGZhM3dCclJpbGZqMjkrTjRMNFg3dzVNYys3TzhNSkJTM3pDM3NqbnRzRzNUR0REUlkyaWp1bU1ucGsxOGl6MWZ4TEc3N0JlVW5Jc3FYeXN1cU9VY2JnT1J3RUE4cEVnKytaZjB5bEkyTlRuMGtSMkMwUStQU1I2OFoveXcxeGhhMzkwL3JzQm4rWVlhekUzQm5HMFpHdjlEZmc9PQ==");
 
@@ -49,7 +49,7 @@
 
             //[3] Ky so
             PdfSigner pdf = new PdfSigner(input, output, cert);
-            pdf.Location = "Hà Nội";
+            pdf.Location = "Quảng Nam";
             pdf.TsaUrl = "http://ca.gov.vn/tsa";
 
             //Hiển thị chữ ký trên tài liệu dạng thông tin miêu tả
@@ -70,58 +70,40 @@
                 bmp.Dispose();
             }
 
-            if (string.IsNullOrEmpty(noiDung))
-            {
-                pdf.SignatureAppearance = PdfSignatureAppearance.RenderingMode.DESCRIPTION;
-                pdf.ShowDate = false;
-                pdf.ShowEmail = false;
-                pdf.ShowJob = false;
-                pdf.ShowLabel = false;
-                pdf.ShowOrg = false;
-
-                width = 60;
-                height = 60;
-                leftPoint = (int)rect.Left;
-                bottomPoint = (int)rect.Bottom - 60;
-            }
-            else
-            {
-
-                pdf.SignatureAppearance = PdfSignatureAppearance.RenderingMode.GRAPHIC;
-                pdf.SignatureImage = System.Drawing.Image.FromFile(imageName);
-
-                width = maDacBiet.Length * 6;
-                height = 16;
-
-                if (!maDacBiet.Equals("#ChuKyNhay"))
-                {
-                    leftPoint = (int)rect.Left;
-                    bottomPoint = (int)rect.Bottom;
-                }
-                else
-                {
-                    if (soChuKyNhayDaCo >= 3)
-                    {
-                        leftPoint = (int)rect.Left + ((soChuKyNhayDaCo % 3) * width);
-                        bottomPoint = (int)rect.Bottom - (Convert.ToInt32(soChuKyNhayDaCo / 3) * height);
-                    }
-                    else if (soChuKyNhayDaCo > 0)
-                    {
-                        leftPoint = (int)rect.Left + (soChuKyNhayDaCo * width);
-                        bottomPoint = (int)rect.Bottom;
-                    }
-                    else
-                    {
-                        leftPoint = (int)rect.Left;
-                        bottomPoint = (int)rect.Bottom;
-                    }
-                }
-            }
 
             try
             {
-                pdf.Sign(1, leftPoint, bottomPoint, width, height); //iPage: trang; llx: toa do X, lly: Toa do y; iWidth: rong; iHeight: cao
-                pdf.SignatureImage.Dispose();
+                if (string.IsNullOrEmpty(noiDung))
+                {
+                    pdf.SignatureAppearance = PdfSignatureAppearance.RenderingMode.DESCRIPTION;
+                    pdf.ShowDate = true;
+                    pdf.ShowEmail = true;
+                    pdf.ShowJob = true;
+                    pdf.ShowLabel = true;
+                    pdf.ShowOrg = true;
+
+                    width = 100;
+                    height = 100;
+                    leftPoint = 800;
+                    bottomPoint = 300;
+
+                    pdf.Sign(1, leftPoint, bottomPoint, width, height); //iPage: trang; llx: toa do X, lly: Toa do y; iWidth: rong; iHeight: cao
+                }
+                else
+                {
+                    pdf.SignatureAppearance = PdfSignatureAppearance.RenderingMode.GRAPHIC;
+                    pdf.SignatureImage = System.Drawing.Image.FromFile(imageName);
+
+                    width = maDacBiet.Length * 6;
+                    height = 16;
+
+                    leftPoint = (int)rect.Left;
+                    bottomPoint = (int)rect.Bottom;
+
+                    pdf.Sign(1, leftPoint, bottomPoint, width, height); //iPage: trang; llx: toa do X, lly: Toa do y; iWidth: rong; iHeight: cao
+                    pdf.SignatureImage.Dispose();
+                }
+
                 
                 image.Dispose();
                 
