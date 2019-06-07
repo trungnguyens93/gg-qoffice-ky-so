@@ -1,8 +1,8 @@
-﻿using eoffice_qn_kyso.App.Models.Include;
-using Newtonsoft.Json;
-
-namespace eoffice_qn_kyso.App.Models.Dto.Command
+﻿namespace eoffice_qn_kyso.Service.Models.Dto.Command
 {
+    using eoffice_qn_kyso.Service.Models.Include;
+    using Newtonsoft.Json;
+
     public class UpdateXuLyDuThaoCmd
     {
         [JsonProperty("ho_so_cong_viec_id")]

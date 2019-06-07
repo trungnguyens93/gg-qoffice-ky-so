@@ -11,13 +11,12 @@
     {
         private KySoService _Service;
         
-        private string _Path;
-        private string _FileName;
+        private string _UrlFileKySo;
+        private bool _LaKySoDonVi;
+        private string _MaDacBiet;
+        private string _NoiDung;
         private string _UrlChuKyKhongDau;
-        private string _NoiDungSo;
-        private string _NoiDungKyHieu;
-        private string _NoiDungDiaDiemBanHanh;
-        private string _NoiDungNgayBanHanh;
+        private string _UrlChuKyCoDau;
         private string _DuThaoId;
         private string _ChucDanhId;
         private string _HscvId;
@@ -29,18 +28,17 @@
             InitializeComponent();
         }
 
-        public KySoBackgroundForm(string path, string fileName, string urlChuKyKhongDau, string noiDungSo, string noiDungKyHieu, string noiDungDiaDiemBanHanh, string noiDungNgayBanHanh, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
+        public KySoBackgroundForm(string urlFileKySo, bool laKySoDonVi, string maDacBiet, string noiDung, string urlChuKyKhongDau, string urlChuKyCoDau, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
         {
             InitializeComponent();
 
             this._Service = new KySoService();
-            this._Path = path;
-            this._FileName = fileName;
+            this._UrlFileKySo = urlFileKySo;
+            this._LaKySoDonVi = laKySoDonVi;
+            this._MaDacBiet = maDacBiet;
+            this._NoiDung = noiDung;
             this._UrlChuKyKhongDau = urlChuKyKhongDau;
-            this._NoiDungSo = noiDungSo;
-            this._NoiDungKyHieu = noiDungKyHieu;
-            this._NoiDungDiaDiemBanHanh = noiDungDiaDiemBanHanh;
-            this._NoiDungNgayBanHanh = noiDungNgayBanHanh;
+            this._UrlChuKyCoDau = urlChuKyCoDau;
             this._DuThaoId = duThaoId;
             this._ChucDanhId = chucDanhId;
             this._HscvId = hscvId;
@@ -91,17 +89,17 @@
                 FTPClientConnector ftpClientConnector = new FTPClientConnector();
                 FileHelper fileHelper = new FileHelper();
 
-                var startInput = this._FileName;
+                var startInput = FileHelper.GetFileNameFromUrl(this._UrlFileKySo);
                 var finalInput = string.Empty;
                 var output = string.Empty;
-                var pathToInputFile = ftpClientConnector.FtpClientRootFolder + ftpClientConnector.FtpClientFolder;
-
+                var pathToProcess = ftpClientConnector.FtpClientRootFolder + ftpClientConnector.FtpClientFolder;
+                
                 // Create folder for downloading and uploading file
-                FolderHelper.CreateTempFolder(pathToInputFile);
+                FolderHelper.CreateTempFolder(pathToProcess);
 
                 // Download file can ky so tu tren ftpserver
-                var downloadStatus = ftpClientConnector.DownloadFile(startInput);
-                if (!downloadStatus)
+                var downloadFileKySoStatus = FileHelper.DownloadFile(this._UrlFileKySo, pathToProcess, "input");
+                if (!downloadFileKySoStatus)
                 {
                     return false;
                 }
@@ -117,15 +115,38 @@
                 //output = StringHelper.ConvertInputToOutput(finalInput);
                 output = StringHelper.ConvertInputToOutput(startInput);
 
+                // Download file chu ky khong dau va chu ky co dau
+                if (string.IsNullOrEmpty(this._UrlChuKyKhongDau))
+                {
+                    var downloadFileChuKyKhongDauStatus = FileHelper.DownloadFile(this._UrlChuKyKhongDau, pathToProcess, "image");
+                    if (!downloadFileChuKyKhongDauStatus)
+                    {
+                        return false;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(this._UrlChuKyCoDau))
+                {
+                    var downloadFileChuKyCoDau = FileHelper.DownloadFile(this._UrlChuKyCoDau, pathToProcess, "image");
+                    if (!downloadFileChuKyCoDau)
+                    {
+                        return false;
+                    }
+                }
+
+                // Lay ten file chu ky co dau va chu ky khong dau
+                var tenFileChuKyKhongDau = string.IsNullOrEmpty(this._UrlChuKyKhongDau) ? string.Empty : FileHelper.GetFileNameFromUrl(this._UrlChuKyKhongDau);
+                var tenFileChuKyCoDau = string.IsNullOrEmpty(this._UrlChuKyCoDau) ? string.Empty : FileHelper.GetFileNameFromUrl(this._UrlChuKyCoDau);
+
                 // Ky so vao file vua lay ve
-                var result = _Service.Sign(pathToInputFile, startInput, "#ChuKyCoDau", null);
+                var result = _Service.Sign(pathToProcess, startInput, this._LaKySoDonVi, this._MaDacBiet, this._NoiDung, tenFileChuKyKhongDau, tenFileChuKyCoDau);
                 if (!result)
                 {
                     return false;
                 }
 
                 // Upload file vua duoc thuc hien ky so
-                var uploadStatus = ftpClientConnector.UpdateFileWithApi(output, this._DuThaoId, this._ChucDanhId, this._HscvId, this._YKien, this._Token);
+                var uploadStatus = FileHelper.UpdateFile(pathToProcess, output, this._DuThaoId, this._ChucDanhId, this._HscvId, this._YKien, this._Token);
                 if (!uploadStatus)
                 {
                     return false;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace eoffice_qn_kyso.App.Models.Dto
+﻿namespace eoffice_qn_kyso.Service.Models.Dto
 {
     public class FileUploadInfoDto
     {

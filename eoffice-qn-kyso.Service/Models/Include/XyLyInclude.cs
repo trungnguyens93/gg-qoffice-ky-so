@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace eoffice_qn_kyso.App.Models.Include
+﻿
+namespace eoffice_qn_kyso.Service.Models.Include
 {
+    using Newtonsoft.Json;
+
     public class XyLyInclude
     {
         [JsonProperty("file_du_thao")]

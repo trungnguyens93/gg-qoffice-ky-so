@@ -9,12 +9,12 @@
 
     public class KySoService
     {
-        public bool Sign(string folderName, string fileName, string maDacBiet, string noiDung)
+        public bool Sign(string folderName, string tenFileKySo, bool laKySoDonVi, string maDacBiet, string noiDung, string tenFileChuKyKhongDau, string tenFileChuKyCoDau)
         {
             VGCACrypto.Authorization.SetKey("TTBNNVFUQkJNakV0UWtJd05DMDBPVFJHTFRnMU1qZ3RNVVk0UkRsQk1EZzVPRFkyZkRZek56QTRNVFU1TXpVNU5EUTVPREU1Tnc9PXxkalZVQUNUbFdQbGZOS3RYOElsLzN1Vi84d1lYVldONk12eXA2Mjg4eXA5TmZhWVFXOHBlbVlQUTlIUGZNdk9oSXNCdWJwc0duMEZSMVM2cDhsbDEwSjI3bjcwajhLM1hzcmdKa1FYdmpHVDJSaDB6SkRteHF1Q24wNVVzQzJnSW14OG1tSGRoQjFaYjNGTHpNNFl4VEdlVXphd2FhNmZGZUp0WlFHc28ydENQZGpOQndxYVdEUmhDdGEvSGZhM3dCclJpbGZqMjkrTjRMNFg3dzVNYys3TzhNSkJTM3pDM3NqbnRzRzNUR0REUlkyaWp1bU1ucGsxOGl6MWZ4TEc3N0JlVW5Jc3FYeXN1cU9VY2JnT1J3RUE4cEVnKytaZjB5bEkyTlRuMGtSMkMwUStQU1I2OFoveXcxeGhhMzkwL3JzQm4rWVlhekUzQm5HMFpHdjlEZmc9PQ==");
 
-            string input = string.Concat(folderName, "\\input\\", fileName);
-            string output = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(fileName));
+            string input = string.Concat(folderName, "\\input\\", tenFileKySo);
+            string output = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo));
 
             X509Certificate2Collection keyStore = new X509Certificate2Collection();
             X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
@@ -61,19 +61,18 @@
             var width = -1;
             var height = -1;
 
-            Image image = ImageHelper.DrawText(noiDung, new System.Drawing.Font("Times New Roman", 14.0f), Color.Black, Color.White, maDacBiet.Length * 11);
-            var imageName = folderName + "\\image" + "\\" + "sign_" + DateTime.UtcNow.ToString("yyMMdd_hhMMss") + ".png";
+            //Image image = ImageHelper.DrawText(noiDung, new System.Drawing.Font("Times New Roman", 14.0f), Color.Black, Color.White, maDacBiet.Length * 11);
+            //var imageName = folderName + "\\image" + "\\" + "sign_" + DateTime.UtcNow.ToString("yyMMdd_hhMMss") + ".png";
 
-            using (var bmp = (Bitmap)image)
-            {
-                bmp.Save(imageName, System.Drawing.Imaging.ImageFormat.Png);
-                bmp.Dispose();
-            }
-
-
+            //using (var bmp = (Bitmap)image)
+            //{
+            //    bmp.Save(imageName, System.Drawing.Imaging.ImageFormat.Png);
+            //    bmp.Dispose();
+            //}
+            
             try
             {
-                if (string.IsNullOrEmpty(noiDung))
+                if (laKySoDonVi)
                 {
                     pdf.SignatureAppearance = PdfSignatureAppearance.RenderingMode.DESCRIPTION;
                     pdf.ShowDate = true;
@@ -91,8 +90,33 @@
                 }
                 else
                 {
+                    Image image = null;
+                    int trangCanKy = 1;
+
                     pdf.SignatureAppearance = PdfSignatureAppearance.RenderingMode.GRAPHIC;
-                    pdf.SignatureImage = System.Drawing.Image.FromFile(imageName);
+
+                    // Xu ly ky so voi 2 loai va ky so lanh dao va nhung cai khac
+                    if (maDacBiet.Equals(Constants.Constant.CHU_KY_CO_DAU))
+                    {
+                        pdf.SignatureImage = System.Drawing.Image.FromFile(folderName + "\\image" + "\\" + noiDung);
+
+                        trangCanKy = 1;
+                    }
+                    else
+                    {
+                        image = ImageHelper.DrawText(noiDung, new System.Drawing.Font("Times New Roman", 14.0f), Color.Black, Color.White, maDacBiet.Length * 11);
+                        var imageName = folderName + "\\image" + "\\" + "sign_" + DateTime.UtcNow.ToString("yyMMdd_hhMMss") + ".png";
+
+                        using (var bmp = (Bitmap)image)
+                        {
+                            bmp.Save(imageName, System.Drawing.Imaging.ImageFormat.Png);
+                            bmp.Dispose();
+                        }
+
+                        pdf.SignatureImage = System.Drawing.Image.FromFile(imageName);
+
+                        trangCanKy = 1;
+                    }
 
                     width = maDacBiet.Length * 6;
                     height = 16;
@@ -100,12 +124,11 @@
                     leftPoint = (int)rect.Left;
                     bottomPoint = (int)rect.Bottom;
 
-                    pdf.Sign(1, leftPoint, bottomPoint, width, height); //iPage: trang; llx: toa do X, lly: Toa do y; iWidth: rong; iHeight: cao
+                    pdf.Sign(trangCanKy, leftPoint, bottomPoint, width, height); //iPage: trang; llx: toa do X, lly: Toa do y; iWidth: rong; iHeight: cao
                     pdf.SignatureImage.Dispose();
-                }
 
-                
-                image.Dispose();
+                    image.Dispose();
+                }
                 
                 return true;
             }
