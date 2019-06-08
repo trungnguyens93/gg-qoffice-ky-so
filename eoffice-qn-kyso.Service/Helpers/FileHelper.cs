@@ -46,13 +46,13 @@
         }
 
         // Upload file va cap nhap thong tin du thao
-        public static bool UpdateFile(string folder, string fileName, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
+        public static bool UpdateFile(string urlBaseFileApi, string urlBaseHoSoCongViecApi, string folder, string fileName, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
         {
             try
             {
                 byte[] bytes = File.ReadAllBytes(folder + "\\" + "output" + "\\" + fileName);
 
-                var restClient = new RestClient("https://dev-file-qn.eoffice.greenglobal.vn");
+                var restClient = new RestClient(urlBaseFileApi);
                 var request = new RestSharp.RestRequest("api/file/upload", Method.POST);
                 request.AddHeader("Authorization", "Bearer " + token);
                 request.AddFile("multipart/form-data", bytes, fileName);
@@ -88,7 +88,7 @@
                     };
 
                     // Call api for updating du thao
-                    var updateThongTinDuThaoResult = UpdateThongTinDuThao(duThaoId, chucDanhId, updateXuLyDuThao, token);
+                    var updateThongTinDuThaoResult = UpdateThongTinDuThao(urlBaseHoSoCongViecApi, duThaoId, chucDanhId, updateXuLyDuThao, token);
 
                     if (updateThongTinDuThaoResult)
                     {
@@ -104,11 +104,9 @@
             }
         }
 
-        private static bool UpdateThongTinDuThao(string duThaoId, string chucDanhId, UpdateXuLyDuThaoCmd command, string token)
+        private static bool UpdateThongTinDuThao(string urlBaseHoSoCongViecApi, string duThaoId, string chucDanhId, UpdateXuLyDuThaoCmd command, string token)
         {
-            // Thieu chucDanhId
-
-            var restClient = new RestClient("https://dev-api-qn.eoffice.greenglobal.vn/ho-so-cong-viec/");
+            var restClient = new RestClient("https://dev-api-qn.eoffice.greenglobal.vn/ho-so-cong-viec");
             var request = new RestSharp.RestRequest($"api/ho-so-cong-viec/du-thao/{duThaoId}/xu-ly", Method.PUT);
             request.AddHeader("X-API-VERSION", "1");
             request.AddHeader("Authorization", "Bearer " + token);

@@ -1,6 +1,7 @@
 ﻿namespace eoffice_qn_kyso
 {
     using eoffice_qn_kyso.CommonServer;
+    using eoffice_qn_kyso.Service.Constants;
     using eoffice_qn_kyso.Service.Helpers;
     using eoffice_qn_kyso.Service.Services;
     using System;
@@ -12,11 +13,10 @@
         private KySoService _Service;
         
         private string _UrlFileKySo;
-        private bool _LaKySoDonVi;
+        private string _LoaiChuKy;
         private string _MaDacBiet;
         private string _NoiDung;
-        private string _UrlChuKyKhongDau;
-        private string _UrlChuKyCoDau;
+        private string _UrlFileAnhChuKy;
         private string _DuThaoId;
         private string _ChucDanhId;
         private string _HscvId;
@@ -28,17 +28,16 @@
             InitializeComponent();
         }
 
-        public KySoBackgroundForm(string urlFileKySo, bool laKySoDonVi, string maDacBiet, string noiDung, string urlChuKyKhongDau, string urlChuKyCoDau, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
+        public KySoBackgroundForm(string urlFileKySo, string loaiChuKy, string maDacBiet, string noiDung, string urlFileAnhChuKy, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
         {
             InitializeComponent();
 
             this._Service = new KySoService();
             this._UrlFileKySo = urlFileKySo;
-            this._LaKySoDonVi = laKySoDonVi;
+            this._LoaiChuKy = loaiChuKy;
             this._MaDacBiet = maDacBiet;
             this._NoiDung = noiDung;
-            this._UrlChuKyKhongDau = urlChuKyKhongDau;
-            this._UrlChuKyCoDau = urlChuKyCoDau;
+            this._UrlFileAnhChuKy = urlFileAnhChuKy;
             this._DuThaoId = duThaoId;
             this._ChucDanhId = chucDanhId;
             this._HscvId = hscvId;
@@ -98,7 +97,8 @@
                 FolderHelper.CreateTempFolder(pathToProcess);
 
                 // Download file can ky so tu tren ftpserver
-                var downloadFileKySoStatus = FileHelper.DownloadFile(this._UrlFileKySo, pathToProcess, "input");
+                //var downloadFileKySoStatus = FileHelper.DownloadFile(this._UrlFileKySo, pathToProcess, "input");
+                var downloadFileKySoStatus = ftpClientConnector.DownloadFile(startInput);
                 if (!downloadFileKySoStatus)
                 {
                     return false;
@@ -115,45 +115,36 @@
                 //output = StringHelper.ConvertInputToOutput(finalInput);
                 output = StringHelper.ConvertInputToOutput(startInput);
 
+                // Lay ten file chu ky co dau va chu ky khong dau
+                var tenFileAnhChuKy = string.IsNullOrEmpty(this._UrlFileAnhChuKy) ? string.Empty : FileHelper.GetFileNameFromUrl(this._UrlFileAnhChuKy);
+
                 // Download file chu ky khong dau va chu ky co dau
-                if (string.IsNullOrEmpty(this._UrlChuKyKhongDau))
+                if (!string.IsNullOrEmpty(tenFileAnhChuKy))
                 {
-                    var downloadFileChuKyKhongDauStatus = FileHelper.DownloadFile(this._UrlChuKyKhongDau, pathToProcess, "image");
+                    //var downloadFileChuKyKhongDauStatus = FileHelper.DownloadFile(this._UrlFileAnhChuKy, pathToProcess, "image");
+                    var downloadFileChuKyKhongDauStatus = ftpClientConnector.DownloadFileAnh(tenFileAnhChuKy);
                     if (!downloadFileChuKyKhongDauStatus)
                     {
                         return false;
                     }
                 }
 
-                if (string.IsNullOrEmpty(this._UrlChuKyCoDau))
-                {
-                    var downloadFileChuKyCoDau = FileHelper.DownloadFile(this._UrlChuKyCoDau, pathToProcess, "image");
-                    if (!downloadFileChuKyCoDau)
-                    {
-                        return false;
-                    }
-                }
-
-                // Lay ten file chu ky co dau va chu ky khong dau
-                var tenFileChuKyKhongDau = string.IsNullOrEmpty(this._UrlChuKyKhongDau) ? string.Empty : FileHelper.GetFileNameFromUrl(this._UrlChuKyKhongDau);
-                var tenFileChuKyCoDau = string.IsNullOrEmpty(this._UrlChuKyCoDau) ? string.Empty : FileHelper.GetFileNameFromUrl(this._UrlChuKyCoDau);
-
                 // Ky so vao file vua lay ve
-                var result = _Service.Sign(pathToProcess, startInput, this._LaKySoDonVi, this._MaDacBiet, this._NoiDung, tenFileChuKyKhongDau, tenFileChuKyCoDau);
+                var result = _Service.Sign(pathToProcess, startInput, this._LoaiChuKy, this._MaDacBiet, this._NoiDung, tenFileAnhChuKy);
                 if (!result)
                 {
                     return false;
                 }
 
                 // Upload file vua duoc thuc hien ky so
-                var uploadStatus = FileHelper.UpdateFile(pathToProcess, output, this._DuThaoId, this._ChucDanhId, this._HscvId, this._YKien, this._Token);
+                var uploadStatus = FileHelper.UpdateFile(ftpClientConnector.UrlBaseFileApi, ftpClientConnector.UrlBaseHoSoCongViecApi, pathToProcess, output, this._DuThaoId, this._ChucDanhId, this._HscvId, this._YKien, this._Token);
                 if (!uploadStatus)
                 {
                     return false;
                 }
 
                 // Delete all the temp files and temp folders
-                FolderHelper.DeleteTempFolder(ftpClientConnector.FtpClientRootFolder, ftpClientConnector.FtpClientFolder);
+                //FolderHelper.DeleteTempFolder(ftpClientConnector.FtpClientRootFolder, ftpClientConnector.FtpClientFolder);
 
                 return true;
             }

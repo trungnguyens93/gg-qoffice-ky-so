@@ -8,22 +8,43 @@
     {
         public static String FontText = "";
 
-        public static readonly string SO = "#So";
-        public static readonly string KY_HIEU_VAN_BAN = "#KyHieu";
-        public static readonly string DIA_DIEM = "#DiaDiemBanHanh";
-        public static readonly string NGAY_BAN_HANH = "#NgayBanHanh";
-        public static readonly string CHU_KY_CO_DAU = "#ChuKyCoDau";
-
-        public static List<LoaiChuKy> CreateStaticResource()
+        public static class LoaiChuKy
         {
-            List<LoaiChuKy> loaiChuKys = new List<LoaiChuKy>();
-            loaiChuKys.Add(new LoaiChuKy() { STT = 1, TenLoaiChiDao = "Số văn bản", MaDacBiet = "#So" });
-            loaiChuKys.Add(new LoaiChuKy() { STT = 2, TenLoaiChiDao = "Ký hiệu văn bản", MaDacBiet = "#KyHieu" });
-            loaiChuKys.Add(new LoaiChuKy() { STT = 3, TenLoaiChiDao = "Địa điểm ban hành", MaDacBiet = "#DiaDiemBanHanh" });
-            loaiChuKys.Add(new LoaiChuKy() { STT = 4, TenLoaiChiDao = "Ngày ban hành", MaDacBiet = "#NgayBanHanh" });
-            loaiChuKys.Add(new LoaiChuKy() { STT = 5, TenLoaiChiDao = "Chũ ký có dấu", MaDacBiet = "#ChuKyCoDau" });
-
-            return loaiChuKys;
+            public static readonly string CHU_KY_DON_VI = "CHU_KY_DON_VI";
+            public static readonly string CHU_KY_CO_DAU = "CHU_KY_CO_DAU";
+            public static readonly string CHU_KY_KHONG_DAU = "CHU_KY_KHONG_DAU";
         }
+
+        public static class MaDacBiet
+        {
+            public static readonly string SO = "#So";
+            public static readonly string KY_HIEU_VAN_BAN = "#KyHieu";
+            public static readonly string DIA_DIEM = "#DiaDiemBanHanh";
+            public static readonly string NGAY_BAN_HANH = "#NgayBanHanh";
+            public static readonly string CHU_KY_CO_DAU = "#ChuKyCoDau";
+        }
+
+        public static List<string> CreateStaticResource()
+        {
+            List<string> dsMaDacBiet = new List<string>();
+            dsMaDacBiet.Add(MaDacBiet.SO);
+            dsMaDacBiet.Add(MaDacBiet.KY_HIEU_VAN_BAN);
+            dsMaDacBiet.Add(MaDacBiet.DIA_DIEM);
+            dsMaDacBiet.Add(MaDacBiet.NGAY_BAN_HANH);
+
+            return dsMaDacBiet;
+        }
+
+        //public static List<LoaiChuKy> CreateStaticResource()
+        //{
+        //    List<LoaiChuKy> loaiChuKys = new List<LoaiChuKy>();
+        //    loaiChuKys.Add(new LoaiChuKy() { STT = 1, TenLoaiChiDao = "Số văn bản", MaDacBiet = "#So" });
+        //    loaiChuKys.Add(new LoaiChuKy() { STT = 2, TenLoaiChiDao = "Ký hiệu văn bản", MaDacBiet = "#KyHieu" });
+        //    loaiChuKys.Add(new LoaiChuKy() { STT = 3, TenLoaiChiDao = "Địa điểm ban hành", MaDacBiet = "#DiaDiemBanHanh" });
+        //    loaiChuKys.Add(new LoaiChuKy() { STT = 4, TenLoaiChiDao = "Ngày ban hành", MaDacBiet = "#NgayBanHanh" });
+        //    loaiChuKys.Add(new LoaiChuKy() { STT = 5, TenLoaiChiDao = "Chũ ký có dấu", MaDacBiet = "#ChuKyCoDau" });
+
+        //    return loaiChuKys;
+        //}
     }
 }

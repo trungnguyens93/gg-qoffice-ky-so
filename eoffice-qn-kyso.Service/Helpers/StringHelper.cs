@@ -36,9 +36,11 @@
         {
             List<string> result = new List<string>(); ;
 
-            var arrStr = arg.Split(':', ';');
+            var strSubTitle = arg.Substring(14);
+
+            var arrStr = strSubTitle.Split(';');
             
-            for (int i=1; i<arrStr.Length; i++)
+            for (int i=0; i<arrStr.Length; i++)
             {
                 if (arrStr[i].IndexOf('=') >= 0)
                 {
