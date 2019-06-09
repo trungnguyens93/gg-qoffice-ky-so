@@ -46,7 +46,7 @@
         }
 
         // Upload file va cap nhap thong tin du thao
-        public static bool UpdateFile(string urlBaseFileApi, string urlBaseHoSoCongViecApi, string folder, string fileName, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
+        public static long UpdateFile(string urlBaseFileApi, string folder, string fileName, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
         {
             try
             {
@@ -67,61 +67,15 @@
 
                     var fileUploadInfos = JsonConvert.DeserializeObject<List<FileUploadInfoDto>>(uploadResult.ToString());
 
-                    // Create Object for 
-                    var fileDuThao = new FileDuThaoInclude
-                    {
-                        FileId = fileUploadInfos[0].Id
-                    };
-
-                    var xuLy = new XyLyInclude
-                    {
-                        FileDuThao = fileDuThao,
-                        LaKySo = true,
-                        Ma = "DONG_Y",
-                        YKien = yKien
-                    };
-
-                    var updateXuLyDuThao = new UpdateXuLyDuThaoCmd
-                    {
-                        HoSoCongViecId = Convert.ToInt64(hscvId),
-                        XuLy = xuLy
-                    };
-
-                    // Call api for updating du thao
-                    var updateThongTinDuThaoResult = UpdateThongTinDuThao(urlBaseHoSoCongViecApi, duThaoId, chucDanhId, updateXuLyDuThao, token);
-
-                    if (updateThongTinDuThaoResult)
-                    {
-                        return true;
-                    }
+                    return fileUploadInfos[0].Id;
                 }
 
-                return false;
+                return 0;
             }
             catch
             {
-                return false;
+                return 0;
             }
-        }
-
-        private static bool UpdateThongTinDuThao(string urlBaseHoSoCongViecApi, string duThaoId, string chucDanhId, UpdateXuLyDuThaoCmd command, string token)
-        {
-            var restClient = new RestClient("https://dev-api-qn.eoffice.greenglobal.vn/ho-so-cong-viec");
-            var request = new RestSharp.RestRequest($"api/ho-so-cong-viec/du-thao/{duThaoId}/xu-ly", Method.PUT);
-            request.AddHeader("X-API-VERSION", "1");
-            request.AddHeader("Authorization", "Bearer " + token);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("chuc-danh-id", chucDanhId);
-            request.AddJsonBody(JsonConvert.SerializeObject(command));
-
-            IRestResponse response = restClient.Execute(request);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         public static bool DownloadFile(string url, string folder, string subFolder)

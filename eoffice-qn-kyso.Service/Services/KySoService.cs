@@ -23,6 +23,7 @@
             int numberOfPages = -1;
             int pageWidth = -1;
             int pageHeight = -1;
+            int trangCanKy = -1;
             
             // Select a certificate to signature
             X509Certificate2Collection keyStore = new X509Certificate2Collection();
@@ -49,19 +50,28 @@
                 return false;
             }
 
-            iTextSharp.text.Rectangle rect = ImageHelper.GetRectPosstionFromPdf(input, maDacBiet);
-
-            if (rect == null || (rect != null && rect.Width <= 0 && rect.Height <= 0))
-            {
-                return false;
-            }
-
             // Lay so trang cuar pdf
             PdfReader pdfReader = new PdfReader(input);
             numberOfPages = pdfReader.NumberOfPages;
             pageWidth = (int) pdfReader.GetPageSize(1).Width;
             pageHeight = (int)pdfReader.GetPageSize(1).Height;
             pdfReader.Dispose();
+
+            if (loaiChuKy.Equals(Constants.Constant.LoaiChuKy.CHU_KY_KHONG_DAU) && maDacBiet.Equals(Constants.Constant.MaDacBiet.CHU_KY_CO_DAU))
+            {
+                trangCanKy = numberOfPages;
+            }
+            else
+            {
+                trangCanKy = 1;
+            }
+
+            iTextSharp.text.Rectangle rect = ImageHelper.GetRectPosstionFromPdf(input, maDacBiet, trangCanKy);
+
+            if (rect == null || (rect != null && rect.Width <= 0 && rect.Height <= 0))
+            {
+                return false;
+            }
             
             //[3] Ky so
             PdfSigner pdf = new PdfSigner(input, output, cert);
@@ -87,14 +97,12 @@
                 else if (loaiChuKy.Equals(Constants.Constant.LoaiChuKy.CHU_KY_KHONG_DAU))
                 {
                     string pathForImageFile = string.Empty;
-                    int trangCanKy = -1;
 
                     // Lay duong dan file anh va trang can ky
                     if (maDacBiet.Equals(Constants.Constant.MaDacBiet.CHU_KY_CO_DAU))
                     {
                         pathForImageFile = folderName + "\\image\\" + tenFileChuKy;
-                        trangCanKy = numberOfPages;
-
+                        
                         width = 120;
                         height = 80;
                         leftPoint = (int)rect.Left - 12;
@@ -111,7 +119,6 @@
                             bmp.Dispose();
                         }
 
-                        trangCanKy = 1;
                         image.Dispose();
 
                         width = maDacBiet.Length * 6;

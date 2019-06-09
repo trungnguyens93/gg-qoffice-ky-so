@@ -11,6 +11,7 @@
     public partial class KySoBackgroundForm : Form
     {
         private KySoService _Service;
+        private HoSoCongViecService _HoSoCongViecService;
         
         private string _UrlFileKySo;
         private string _LoaiChuKy;
@@ -33,6 +34,8 @@
             InitializeComponent();
 
             this._Service = new KySoService();
+            this._HoSoCongViecService = new HoSoCongViecService();
+
             this._UrlFileKySo = urlFileKySo;
             this._LoaiChuKy = loaiChuKy;
             this._MaDacBiet = maDacBiet;
@@ -137,10 +140,20 @@
                 }
 
                 // Upload file vua duoc thuc hien ky so
-                var uploadStatus = FileHelper.UpdateFile(ftpClientConnector.UrlBaseFileApi, ftpClientConnector.UrlBaseHoSoCongViecApi, pathToProcess, output, this._DuThaoId, this._ChucDanhId, this._HscvId, this._YKien, this._Token);
-                if (!uploadStatus)
+                var fileId = FileHelper.UpdateFile(ftpClientConnector.UrlBaseFileApi, pathToProcess, output, this._DuThaoId, this._ChucDanhId, this._HscvId, this._YKien, this._Token);
+                if (fileId == 0)
                 {
                     return false;
+                }
+
+                // Cap nhap thong tin du thao
+                if (this._LoaiChuKy.Equals(Constant.LoaiChuKy.CHU_KY_KHONG_DAU) && this._MaDacBiet.Equals(Constant.MaDacBiet.CHU_KY_CO_DAU))
+                {
+                    var updateThongTinHscvStatus = _HoSoCongViecService.UpdateThongTinDuThao(ftpClientConnector.UrlBaseHoSoCongViecApi, this._DuThaoId, this._ChucDanhId, this._HscvId, fileId, this._YKien, this._Token);
+                    if (!updateThongTinHscvStatus)
+                    {
+                        return false;
+                    }
                 }
 
                 // Delete all the temp files and temp folders

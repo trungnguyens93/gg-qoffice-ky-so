@@ -78,6 +78,7 @@
     <Compile Include="Models\Include\XyLyInclude.cs" />
     <Compile Include="Models\LoaiChuKy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\HoSoCongViecService.cs" />
     <Compile Include="Services\KySoService.cs" />
     <Compile Include="TextExtractions\LocationTextExtractionStrategyEx.cs" />
     <Compile Include="TextExtractions\RectAndText.cs" />
