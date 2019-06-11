@@ -22,6 +22,23 @@
             return result;
         }
 
+        public static String ConvertInputToOutput(string fileName, int number)
+        {
+            var result = string.Empty;
+
+            if (fileName.IndexOf("signed") < 0)
+            {
+                string[] arrStr = fileName.Split('.');
+                result = String.Concat(arrStr[0], $".signed{number}.", "pdf");
+            }
+            else
+            {
+                result = fileName;
+            }
+
+            return result;
+        }
+
         public static String ConvertFileNameFromWordToPdf(string fileName)
         {
             var result = string.Empty;

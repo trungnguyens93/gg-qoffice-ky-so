@@ -12,15 +12,14 @@
     {
         private KySoService _Service;
         private HoSoCongViecService _HoSoCongViecService;
-        
-        private string _UrlFileKySo;
-        private string _LoaiChuKy;
-        private string _MaDacBiet;
+        private NguoiDungService _NguoiDungService;
+
+        private string _TrangThaiKySo;
+        private string _GiaiDoanChuKy;
         private string _NoiDung;
-        private string _UrlFileAnhChuKy;
         private string _DuThaoId;
         private string _ChucDanhId;
-        private string _HscvId;
+        private string _Id;
         private string _YKien;
         private string _Token;
         
@@ -29,21 +28,20 @@
             InitializeComponent();
         }
 
-        public KySoBackgroundForm(string urlFileKySo, string loaiChuKy, string maDacBiet, string noiDung, string urlFileAnhChuKy, string duThaoId, string chucDanhId, string hscvId, string yKien, string token)
+        public KySoBackgroundForm(string trangThaiKySo, string giaiDoanKySo, string noiDung, string duThaoId, string chucDanhId, string id, string yKien, string token)
         {
             InitializeComponent();
 
             this._Service = new KySoService();
             this._HoSoCongViecService = new HoSoCongViecService();
+            this._NguoiDungService = new NguoiDungService();
 
-            this._UrlFileKySo = urlFileKySo;
-            this._LoaiChuKy = loaiChuKy;
-            this._MaDacBiet = maDacBiet;
+            this._TrangThaiKySo = trangThaiKySo;
+            this._GiaiDoanChuKy = giaiDoanKySo;
             this._NoiDung = noiDung;
-            this._UrlFileAnhChuKy = urlFileAnhChuKy;
             this._DuThaoId = duThaoId;
             this._ChucDanhId = chucDanhId;
-            this._HscvId = hscvId;
+            this._Id = id;
             this._YKien = yKien;
             this._Token = token;
         }
@@ -91,18 +89,65 @@
                 FTPClientConnector ftpClientConnector = new FTPClientConnector();
                 FileHelper fileHelper = new FileHelper();
 
-                var startInput = FileHelper.GetFileNameFromUrl(this._UrlFileKySo);
+                //var startInput = FileHelper.GetFileNameFromUrl(this._UrlFileKySo);
+                var startInput = string.Empty;
                 var finalInput = string.Empty;
                 var output = string.Empty;
                 var pathToProcess = ftpClientConnector.FtpClientRootFolder + ftpClientConnector.FtpClientFolder;
+                var pathToImageFile = string.Empty;
+                var urlDownloadFileDuThao = string.Empty;
+                var tenFileAnhChuKy = string.Empty;
                 
                 // Create folder for downloading and uploading file
                 FolderHelper.CreateTempFolder(pathToProcess);
 
+                // Lay thong tin file du thao
+                if (this._TrangThaiKySo.Equals(Constant.TrangThaiKySo.HO_SO_CONG_VIEC))
+                {
+                    var fileDuThaoHscvInfo = _HoSoCongViecService.GetThongTinFileDuThao(ftpClientConnector.UrlBaseHoSoCongViecApi, this._ChucDanhId, this._DuThaoId, this._Token);
+                    if (fileDuThaoHscvInfo == null)
+                    {
+                        return false;
+                    }
+                    startInput = fileDuThaoHscvInfo.TenFile;
+                    urlDownloadFileDuThao = fileDuThaoHscvInfo.Url;
+                }
+                
+                // Lay thong tin nguoi dung
+                var thongTinNguoiDung = _NguoiDungService.GetThongTinNguoiDung(ftpClientConnector.UrlBaseHeThongApi, this._Token);
+                if (thongTinNguoiDung == null)
+                {
+                    return false;
+                }
+
+                if (this._TrangThaiKySo.Equals(Constant.TrangThaiKySo.HO_SO_CONG_VIEC) || (this._TrangThaiKySo.Equals(Constant.TrangThaiKySo.VAN_BAN_DI) && this._GiaiDoanChuKy.Equals(Constant.GiaiDoanKySo.KY_SO_LANH_DAO)))
+                {
+                    tenFileAnhChuKy = "chu_ky_khong_dau.png";
+                    pathToImageFile = pathToProcess + "\\image\\" + tenFileAnhChuKy;
+
+                    var convertedImageResult = FileHelper.ConvertDataUrlToImage(pathToImageFile, thongTinNguoiDung.DsChucDanh[0].ChuKyKhongDau);
+
+                    if (!convertedImageResult)
+                    {
+                        return false;
+                    }
+                } else
+                {
+                    tenFileAnhChuKy = "chu_ky_co_dau.png";
+                    pathToImageFile = pathToProcess + "\\image\\" + tenFileAnhChuKy;
+
+                    var convertedImageResult = FileHelper.ConvertDataUrlToImage(pathToImageFile, thongTinNguoiDung.DsChucDanh[0].ChuKyCoDau);
+
+                    if (!convertedImageResult)
+                    {
+                        return false;
+                    }
+                }
+
                 // Download file can ky so tu tren ftpserver
-                //var downloadFileKySoStatus = FileHelper.DownloadFile(this._UrlFileKySo, pathToProcess, "input");
-                var downloadFileKySoStatus = ftpClientConnector.DownloadFile(startInput);
-                if (!downloadFileKySoStatus)
+                var downloadFileDuThaoStatus = FileHelper.DownloadFile(ftpClientConnector.UrlBaseFileApi + urlDownloadFileDuThao, pathToProcess, "input", startInput);
+                //var downloadFileKySoStatus = ftpClientConnector.DownloadFile(startInput);
+                if (!downloadFileDuThaoStatus)
                 {
                     return false;
                 }
@@ -118,38 +163,24 @@
                 //output = StringHelper.ConvertInputToOutput(finalInput);
                 output = StringHelper.ConvertInputToOutput(startInput);
 
-                // Lay ten file chu ky co dau va chu ky khong dau
-                var tenFileAnhChuKy = string.IsNullOrEmpty(this._UrlFileAnhChuKy) ? string.Empty : FileHelper.GetFileNameFromUrl(this._UrlFileAnhChuKy);
-
-                // Download file chu ky khong dau va chu ky co dau
-                if (!string.IsNullOrEmpty(tenFileAnhChuKy))
-                {
-                    //var downloadFileChuKyKhongDauStatus = FileHelper.DownloadFile(this._UrlFileAnhChuKy, pathToProcess, "image");
-                    var downloadFileChuKyKhongDauStatus = ftpClientConnector.DownloadFileAnh(tenFileAnhChuKy);
-                    if (!downloadFileChuKyKhongDauStatus)
-                    {
-                        return false;
-                    }
-                }
-
                 // Ky so vao file vua lay ve
-                var result = _Service.Sign(pathToProcess, startInput, this._LoaiChuKy, this._MaDacBiet, this._NoiDung, tenFileAnhChuKy);
+                var result = _Service.Sign(pathToProcess, startInput, this._TrangThaiKySo, this._GiaiDoanChuKy, this._NoiDung, tenFileAnhChuKy);
                 if (!result)
                 {
                     return false;
                 }
 
                 // Upload file vua duoc thuc hien ky so
-                var fileId = FileHelper.UpdateFile(ftpClientConnector.UrlBaseFileApi, pathToProcess, output, this._DuThaoId, this._ChucDanhId, this._HscvId, this._YKien, this._Token);
+                var fileId = FileHelper.UpdateFile(ftpClientConnector.UrlBaseFileApi, pathToProcess, output, this._DuThaoId, this._ChucDanhId, this._Id, this._YKien, this._Token);
                 if (fileId == 0)
                 {
                     return false;
                 }
 
                 // Cap nhap thong tin du thao
-                if (this._LoaiChuKy.Equals(Constant.LoaiChuKy.CHU_KY_KHONG_DAU) && this._MaDacBiet.Equals(Constant.MaDacBiet.CHU_KY_CO_DAU))
+                if (this._TrangThaiKySo.Equals(Constant.TrangThaiKySo.HO_SO_CONG_VIEC))
                 {
-                    var updateThongTinHscvStatus = _HoSoCongViecService.UpdateThongTinDuThao(ftpClientConnector.UrlBaseHoSoCongViecApi, this._DuThaoId, this._ChucDanhId, this._HscvId, fileId, this._YKien, this._Token);
+                    var updateThongTinHscvStatus = _HoSoCongViecService.UpdateThongTinDuThao(ftpClientConnector.UrlBaseHoSoCongViecApi, this._DuThaoId, this._ChucDanhId, this._Id, fileId, this._YKien, this._Token);
                     if (!updateThongTinHscvStatus)
                     {
                         return false;

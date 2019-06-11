@@ -14,7 +14,7 @@
         private const string DEFAULT_FORMAT_DATE_TIME = "yyMMdd_hhMMss";
         private const string DEFAULT_PDF_FILE = ".png";
 
-        public bool Sign(string folderName, string tenFileKySo, string loaiChuKy, string maDacBiet, string noiDung, string tenFileChuKy)
+        public bool Sign(string folderName, string tenFileKySo, string trangThaiKySo, string giaiDoanKySo, string noiDung, string tenFileChuKy)
         {
             VGCACrypto.Authorization.SetKey("TTBNNVFUQkJNakV0UWtJd05DMDBPVFJHTFRnMU1qZ3RNVVk0UkRsQk1EZzVPRFkyZkRZek56QTRNVFU1TXpVNU5EUTVPREU1Tnc9PXxkalZVQUNUbFdQbGZOS3RYOElsLzN1Vi84d1lYVldONk12eXA2Mjg4eXA5TmZhWVFXOHBlbVlQUTlIUGZNdk9oSXNCdWJwc0duMEZSMVM2cDhsbDEwSjI3bjcwajhLM1hzcmdKa1FYdmpHVDJSaDB6SkRteHF1Q24wNVVzQzJnSW14OG1tSGRoQjFaYjNGTHpNNFl4VEdlVXphd2FhNmZGZUp0WlFHc28ydENQZGpOQndxYVdEUmhDdGEvSGZhM3dCclJpbGZqMjkrTjRMNFg3dzVNYys3TzhNSkJTM3pDM3NqbnRzRzNUR0REUlkyaWp1bU1ucGsxOGl6MWZ4TEc3N0JlVW5Jc3FYeXN1cU9VY2JnT1J3RUE4cEVnKytaZjB5bEkyTlRuMGtSMkMwUStQU1I2OFoveXcxeGhhMzkwL3JzQm4rWVlhekUzQm5HMFpHdjlEZmc9PQ==");
 
@@ -24,7 +24,8 @@
             int pageWidth = -1;
             int pageHeight = -1;
             int trangCanKy = -1;
-            
+            string pathForImageFile = string.Empty;
+
             // Select a certificate to signature
             X509Certificate2Collection keyStore = new X509Certificate2Collection();
             X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
@@ -57,27 +58,22 @@
             pageHeight = (int)pdfReader.GetPageSize(1).Height;
             pdfReader.Dispose();
 
-            if (loaiChuKy.Equals(Constants.Constant.LoaiChuKy.CHU_KY_KHONG_DAU) && maDacBiet.Equals(Constants.Constant.MaDacBiet.CHU_KY_CO_DAU))
-            {
-                trangCanKy = numberOfPages;
-            }
-            else
-            {
-                trangCanKy = 1;
-            }
+            //if (loaiChuKy.Equals(Constants.Constant.LoaiChuKy.CHU_KY_KHONG_DAU) && maDacBiet.Equals(Constants.Constant.MaDacBiet.CHU_KY_CO_DAU))
+            //{
+            //    trangCanKy = numberOfPages;
+            //}
+            //else
+            //{
+            //    trangCanKy = 1;
+            //}
 
-            iTextSharp.text.Rectangle rect = ImageHelper.GetRectPosstionFromPdf(input, maDacBiet, trangCanKy);
+            //iTextSharp.text.Rectangle rect = ImageHelper.GetRectPosstionFromPdf(input, maDacBiet, trangCanKy);
 
-            if (rect == null || (rect != null && rect.Width <= 0 && rect.Height <= 0))
-            {
-                return false;
-            }
-            
-            //[3] Ky so
-            PdfSigner pdf = new PdfSigner(input, output, cert);
-            pdf.Location = "Quảng Nam";
-            pdf.TsaUrl = "http://ca.gov.vn/tsa";
-
+            //if (rect == null || (rect != null && rect.Width <= 0 && rect.Height <= 0))
+            //{
+            //    return false;
+            //}
+           
             var leftPoint = -1;
             var bottomPoint = -1;
             var width = -1;
@@ -85,33 +81,57 @@
             
             try
             {
-                if (loaiChuKy.Equals(Constants.Constant.LoaiChuKy.CHU_KY_DON_VI))
+                //if (loaiChuKy.Equals(Constants.Constant.LoaiChuKy.CHU_KY_DON_VI))
+                if (trangThaiKySo.Equals(Constants.Constant.TrangThaiKySo.HO_SO_CONG_VIEC) || (trangThaiKySo.Equals(Constants.Constant.TrangThaiKySo.VAN_BAN_DI) && giaiDoanKySo.Equals(Constants.Constant.GiaiDoanKySo.KY_SO_LANH_DAO)))
                 {
-                    width = 100;
-                    height = 100;
-                    leftPoint = pageWidth - 100;
-                    bottomPoint = pageHeight - 100;
+                    //width = 100;
+                    //height = 100;
+                    //leftPoint = pageWidth - 100;
+                    //bottomPoint = pageHeight - 100;
 
-                    this.KySoDonVi(pdf, leftPoint, bottomPoint, width, height);
-                }
-                else if (loaiChuKy.Equals(Constants.Constant.LoaiChuKy.CHU_KY_KHONG_DAU))
-                {
-                    string pathForImageFile = string.Empty;
+                    //this.KySoDonVi(input, output, cert, leftPoint, bottomPoint, width, height);
+                    
+                    pathForImageFile = folderName + "\\image\\" + tenFileChuKy;
+                    trangCanKy = numberOfPages;
 
-                    // Lay duong dan file anh va trang can ky
-                    if (maDacBiet.Equals(Constants.Constant.MaDacBiet.CHU_KY_CO_DAU))
+                    iTextSharp.text.Rectangle rect = ImageHelper.GetRectPosstionFromPdf(input, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU, trangCanKy);
+
+                    if (rect == null || (rect != null && rect.Width <= 0 && rect.Height <= 0))
                     {
-                        pathForImageFile = folderName + "\\image\\" + tenFileChuKy;
-                        
-                        width = 120;
-                        height = 80;
-                        leftPoint = (int)rect.Left - 12;
-                        bottomPoint = (int)rect.Bottom - 40;
+                        return false;
                     }
-                    else
+
+                    width = 120;
+                    height = 80;
+                    leftPoint = (int)rect.Left;
+                    bottomPoint = (int)rect.Bottom - 40;
+
+                    this.KySoKhongDau(input, output, cert, pathForImageFile, trangCanKy, leftPoint, bottomPoint, width, height);
+                }
+                //else if (loaiChuKy.Equals(Constants.Constant.LoaiChuKy.CHU_KY_KHONG_DAU))
+                else
+                {
+                    //string pathForImageFile = string.Empty;
+                    trangCanKy = 1;
+
+                    string tempInput = input;
+                    string tempOutput = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo, 0));
+
+                    var dsMaDacBiet = Constants.Constant.CreateStaticResource();
+                    string[] arrStr = noiDung.Split(',');
+
+                    for (int i = 0; i < dsMaDacBiet.Count; i++)
                     {
-                        Image image = ImageHelper.DrawText(noiDung, new System.Drawing.Font(DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE), Color.Black, Color.White, maDacBiet.Length * 11);
-                        pathForImageFile = folderName + "\\image\\" + "sign_" + DateTime.UtcNow.ToString(DEFAULT_FORMAT_DATE_TIME) + DEFAULT_PDF_FILE;
+                        iTextSharp.text.Rectangle tempRect = ImageHelper.GetRectPosstionFromPdf(input, dsMaDacBiet[i], trangCanKy);
+
+                        if (tempRect == null || (tempRect != null && tempRect.Width <= 0 && tempRect.Height <= 0))
+                        {
+                            return false;
+                        }
+
+                        // Tao file anh
+                        Image image = ImageHelper.DrawText(arrStr[i], new System.Drawing.Font(DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE), Color.Black, Color.White, dsMaDacBiet[i].Length * 11);
+                        pathForImageFile = folderName + "\\image\\" + $"sign_{i}_" + DateTime.UtcNow.ToString(DEFAULT_FORMAT_DATE_TIME) + DEFAULT_PDF_FILE;
 
                         using (var bmp = (Bitmap)image)
                         {
@@ -121,16 +141,105 @@
 
                         image.Dispose();
 
-                        width = maDacBiet.Length * 6;
+                        // Setting vi tri can ky
+                        width = dsMaDacBiet[i].Length * 6;
                         height = 16;
-                        leftPoint = (int)rect.Left;
-                        bottomPoint = (int)rect.Bottom;
+                        leftPoint = (int)tempRect.Left;
+                        bottomPoint = (int)tempRect.Bottom;
+
+                        this.KySoKhongDau(tempInput, tempOutput, cert, pathForImageFile, trangCanKy, leftPoint, bottomPoint, width, height);
+
+                        // Thay dou ten file input va output
+                        tempInput = tempOutput;
+                        tempOutput = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo, i + 1));
+
+                        //if (i < 3)
+                        //{
+                        //    this.KySoKhongDau(tempInput, tempOutput, cert, pathForImageFile, trangCanKy, leftPoint, bottomPoint, width, height);
+
+                        //    // Thay dou ten file input va output
+                        //    tempInput = tempOutput;
+                        //    tempOutput = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo, i + 1));
+                        //}
+                        //else
+                        //{
+                        //    this.KySoKhongDau(tempInput, output, cert, pathForImageFile, trangCanKy, leftPoint, bottomPoint, width, height);
+                        //}
                     }
 
+                    // Ky so don vi
+                    width = 100;
+                    height = 100;
+                    leftPoint = pageWidth - 100;
+                    bottomPoint = pageHeight - 100;
 
-                    this.KySoKhongDau(pdf, pathForImageFile, trangCanKy, leftPoint, bottomPoint, width, height);
+                    this.KySoDonVi(tempInput, output, cert, leftPoint, bottomPoint, width, height);
+
+
+
+                    // Lay duong dan file anh va trang can ky
+                    //if (maDacBiet.Equals(Constants.Constant.MaDacBiet.CHU_KY_CO_DAU))
+                    //{
+                    //    pathForImageFile = folderName + "\\image\\" + tenFileChuKy;
+
+                    //    width = 120;
+                    //    height = 80;
+                    //    leftPoint = (int)rect.Left - 12;
+                    //    bottomPoint = (int)rect.Bottom - 40;
+
+                    //    this.KySoKhongDau(input, output, cert, pathForImageFile, trangCanKy, leftPoint, bottomPoint, width, height);
+                    //}
+                    //else
+                    //{
+                    //    string tempInput = input;
+                    //    string tempOutput = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo, 0));
+
+                    //    var dsMaDacBiet = Constants.Constant.CreateStaticResource();
+                    //    string[] arrStr = noiDung.Split(',');
+
+                    //    for (int i=0; i< dsMaDacBiet.Count; i++)
+                    //    {
+                    //        iTextSharp.text.Rectangle tempRect = ImageHelper.GetRectPosstionFromPdf(input, dsMaDacBiet[i], 1);
+
+                    //        if (tempRect == null || (tempRect != null && tempRect.Width <= 0 && tempRect.Height <= 0))
+                    //        {
+                    //            return false;
+                    //        }
+
+                    //        // Tao file anh
+                    //        Image image = ImageHelper.DrawText(arrStr[i], new System.Drawing.Font(DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE), Color.Black, Color.White, dsMaDacBiet[i].Length * 11);
+                    //        pathForImageFile = folderName + "\\image\\" + $"sign_{i}_" + DateTime.UtcNow.ToString(DEFAULT_FORMAT_DATE_TIME) + DEFAULT_PDF_FILE;
+
+                    //        using (var bmp = (Bitmap)image)
+                    //        {
+                    //            bmp.Save(pathForImageFile, System.Drawing.Imaging.ImageFormat.Png);
+                    //            bmp.Dispose();
+                    //        }
+
+                    //        image.Dispose();
+
+                    //        // Setting vi tri can ky
+                    //        width = dsMaDacBiet[i].Length * 6;
+                    //        height = 16;
+                    //        leftPoint = (int)tempRect.Left;
+                    //        bottomPoint = (int)tempRect.Bottom;
+
+                    //        if (i < 3)
+                    //        {
+                    //            this.KySoKhongDau(tempInput, tempOutput, cert, pathForImageFile, trangCanKy, leftPoint, bottomPoint, width, height);
+
+                    //            // Thay dou ten file input va output
+                    //            tempInput = tempOutput;
+                    //            tempOutput = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo, i + 1));
+                    //        }
+                    //        else
+                    //        {
+                    //            this.KySoKhongDau(tempInput, output, cert, pathForImageFile, trangCanKy, leftPoint, bottomPoint, width, height);
+                    //        }
+                    //    }
+                    //}
                 }
-                
+
                 return true;
             }
             catch
@@ -147,10 +256,15 @@
         /// <param name="bottomPoint"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        private void KySoDonVi(PdfSigner pdf, int leftPoint, int bottomPoint, int width, int height)
+        private void KySoDonVi(string input, string output, X509Certificate2 cert, int leftPoint, int bottomPoint, int width, int height)
         {
             try
             {
+                //[3] Ky so
+                PdfSigner pdf = new PdfSigner(input, output, cert);
+                pdf.Location = "Quảng Nam";
+                pdf.TsaUrl = "http://ca.gov.vn/tsa";
+
                 pdf.SignatureAppearance = PdfSignatureAppearance.RenderingMode.DESCRIPTION;
                 pdf.ShowDate = true;
                 pdf.ShowEmail = true;
@@ -176,11 +290,15 @@
         /// <param name="bottomPoint"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        private void KySoKhongDau(PdfSigner pdf, string pathForImageFile, int trangKy, int leftPoint, int bottomPoint, int width, int height)
+        private void KySoKhongDau(string input, string output, X509Certificate2 cert, string pathForImageFile, int trangKy, int leftPoint, int bottomPoint, int width, int height)
         {
             try
             {
                 Image image = Image.FromFile(pathForImageFile);
+
+                PdfSigner pdf = new PdfSigner(input, output, cert);
+                pdf.Location = "Quảng Nam";
+                pdf.TsaUrl = "http://ca.gov.vn/tsa";
 
                 pdf.SignatureAppearance = PdfSignatureAppearance.RenderingMode.GRAPHIC;
                 pdf.SignatureImage = image;

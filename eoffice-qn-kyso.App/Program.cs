@@ -29,14 +29,19 @@
             //    return;
             //}
 
-            string temp = "qOffice-ky-so:urlFileKySo=FileCongVan-T1.pdf;loaiChuKy=CHU_KY_KHONG_DAU;maDacBiet=#ChuKyCoDau;noidung=88;urlFileAnhChuKy=icon.png;duThaoId=123;chucDanhId=10;hscvId=123;yKien=Nguyễn Thành trung;token=eyJ4NXQiOiJNekF6TjJNeVlUY3paakF3TnpWak9HSTRNbVE1TUROaU5HTTRabVZrTmpJM1lUaGpaREkxTWciLCJraWQiOiJNekF6TjJNeVlUY3paakF3TnpWak9HSTRNbVE1TUROaU5HTTRabVZrTmpJM1lUaGpaREkxTWciLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0cnVuZ250QGNhcmJvbi5zdXBlciIsImF1ZCI6ImNOeEt5ZUp3YWZ1X1E1UHAzZlpqNlpKVFRlY2EiLCJuYmYiOjE1NTk4NzI0MjAsImF6cCI6ImNOeEt5ZUp3YWZ1X1E1UHAzZlpqNlpKVFRlY2EiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIiwiaXNzIjoiaHR0cHM6XC9cL3Nzby5sZ3NwLmdyZWVuZ2xvYmFsLnZuOjQ0M1wvb2F1dGgyXC90b2tlbiIsImdyb3VwcyI6WyJBcHBsaWNhdGlvblwvc3NvX2lzIiwiQXBwbGljYXRpb25cL3Nzb19hbSIsIkludGVybmFsXC9jcmVhdG9yIiwiSW50ZXJuYWxcL2V2ZXJ5b25lIiwiYWRtaW4iLCJBcHBsaWNhdGlvblwvYWRtaW5fdHJ1Y2xpZW50aG9uZ19QUk9EVUNUSU9OIiwiQXBwbGljYXRpb25cL3Nzb19laSIsIkFwcGxpY2F0aW9uXC92aWV0LXRlc3QiLCJBcHBsaWNhdGlvblwvZW9mZmljZS1sb2NhbCIsIkFwcGxpY2F0aW9uXC9BUElfUFVCTElTSEVSIiwiQXBwbGljYXRpb25cL0FQSV9TVE9SRSIsIkFwcGxpY2F0aW9uXC9lb2ZmaWNlLXRlc3QxIl0sImV4cCI6MTU2MDIzMjQyMCwiaWF0IjoxNTU5ODcyNDIwLCJqdGkiOiI2Zjg1YjQzYi0xZmFjLTQyNjUtODIwNy02ZmEzZDg0NTM3YTcifQ.kqLhq_0KG27TUIAnmNCi6h4Pho5A4fZOPwFrgm_GXhqKUNh9SAVSlFSk86cn9GCCAVwWsp-UrTGS5m8x1um7BXStIUJiD_qrUTzX4u01Cz1us83vuvljcAIMNeCwSmlOX5hEoZTRRSPKGVHAJYipAD-_ozY0O-6IdtJKR2FNgvIhrcXTK-1-sa2a64gYDt9yjHXZxFHvEwlecgi3t5VxIZ3b576Sf3ankps6fzvyi8z7Q9Wv1nEb54dkjukMpV7z43wsjKbr8jb1PfSzl5qaDvZLV1_ku_H_yEkPwar3gLWab47heQ_0DKbuRkPpgMZfOle1cEqQzmkxKHCdvDbXMg";
+            string temp = "qOffice-ky-so:trangThaiKySo=HO_SO_CONG_VIEC;giaiDoanKySo=KY_SO_LANH_DAO;noidung=88,trungnt,trungnt,trungnt;duThaoId=175;chucDanhId=10;id=184;yKien=Nguyễn Thành trung;token=eyJ4NXQiOiJNekF6TjJNeVlUY3paakF3TnpWak9HSTRNbVE1TUROaU5HTTRabVZrTmpJM1lUaGpaREkxTWciLCJraWQiOiJNekF6TjJNeVlUY3paakF3TnpWak9HSTRNbVE1TUROaU5HTTRabVZrTmpJM1lUaGpaREkxTWciLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhbnZ0IiwiYXVkIjoiY054S3llSndhZnVfUTVQcDNmWmo2WkpUVGVjYSIsIm5iZiI6MTU2MDIzNDA5NSwiYXpwIjoiY054S3llSndhZnVfUTVQcDNmWmo2WkpUVGVjYSIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUiLCJpc3MiOiJodHRwczpcL1wvc3NvLmxnc3AuZ3JlZW5nbG9iYWwudm46NDQzXC9vYXV0aDJcL3Rva2VuIiwiZ3JvdXBzIjpbIkFwcGxpY2F0aW9uXC9zc29faXMiLCJBcHBsaWNhdGlvblwvc3NvX2FtIiwiSW50ZXJuYWxcL2NyZWF0b3IiLCJJbnRlcm5hbFwvZXZlcnlvbmUiLCJhZG1pbiIsIkFwcGxpY2F0aW9uXC9hZG1pbl90cnVjbGllbnRob25nX1BST0RVQ1RJT04iLCJBcHBsaWNhdGlvblwvc3NvX2VpIiwiQXBwbGljYXRpb25cL3ZpZXQtdGVzdCIsIkFwcGxpY2F0aW9uXC9lb2ZmaWNlLWxvY2FsIiwiQXBwbGljYXRpb25cL0FQSV9QVUJMSVNIRVIiLCJBcHBsaWNhdGlvblwvQVBJX1NUT1JFIiwiQXBwbGljYXRpb25cL2VvZmZpY2UtdGVzdDEiXSwiZXhwIjoxNTYwNTk0MDk1LCJpYXQiOjE1NjAyMzQwOTUsImp0aSI6ImNhZmFhNDEyLTM3YWUtNDUyYi05YTI2LTc5NGI5YmI3Yjk2YiJ9.keI1c17CsonRpMuYSbM9OhruBtZMflIairGE8psNSEnJEnMd_QpJtmzlJz7t2g6Rt88g4zsJFOLHnClVgWJOKO8ZzBkM4aYWr5wEu9Vr14fMnN2XH0RciJRNzUoy0jaBedAvhpqeKHE3OpGVv1snvmOATRdkMV6PurBPuwuLRojnXG8hf44tmBjrR9DJnX_DBm7wFOkbjvpEiGsFMX7TlXdM5LaAq5MkpxKYva-Jig0R5Ow01QV3eiy77-0-PNq1fjbB7rQjtwWqJsSATlu1W2LEQEK61xJXx2zUNTNRiuHlj4NvtqEV-fz-ATHIO62s4DvyiQcGLZePXLnmv_BVJg";
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             //string[] arrStr = StringHelper.ReadDataInput(args[0]).ToArray();
             string[] arrStr = StringHelper.ReadDataInput(temp).ToArray();
-            Application.Run(new KySoBackgroundForm(arrStr[0], arrStr[1], arrStr[2], arrStr[3], arrStr[4], arrStr[5], arrStr[6], arrStr[7], arrStr[8], arrStr[9]));
+            if (arrStr.Length != 8)
+            {
+                return;
+            }
+
+            Application.Run(new KySoBackgroundForm(arrStr[0], arrStr[1], arrStr[2], arrStr[3], arrStr[4], arrStr[5], arrStr[6], arrStr[7]));
         }
     }
 }

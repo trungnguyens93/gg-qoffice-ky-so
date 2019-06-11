@@ -8,6 +8,18 @@
     {
         public static String FontText = "";
 
+        public static class TrangThaiKySo
+        {
+            public static readonly string HO_SO_CONG_VIEC = "HO_SO_CONG_VIEC";
+            public static readonly string VAN_BAN_DI = "VAN_BAN_DI";
+        }
+
+        public static class GiaiDoanKySo
+        {
+            public static readonly string KY_SO_LANH_DAO = "KY_SO_LANH_DAO";
+            public static readonly string KY_SO_BAN_HANH = "KY_SO_BAN_HANH";
+        }
+
         public static class LoaiChuKy
         {
             public static readonly string CHU_KY_DON_VI = "CHU_KY_DON_VI";

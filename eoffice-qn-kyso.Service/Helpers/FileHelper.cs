@@ -9,8 +9,11 @@
     using Spire.Doc;
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Imaging;
     using System.IO;
     using System.Net;
+    using System.Text.RegularExpressions;
 
     public class FileHelper
     {
@@ -22,6 +25,28 @@
             result = arrStr[arrStr.Length - 1];
 
             return result;
+        }
+
+        public static bool ConvertDataUrlToImage(string pathToImageFile, string data)
+        {
+            try
+            {
+                var base64Data = Regex.Match(data, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+                var binData = Convert.FromBase64String(base64Data);
+
+                using (var stream = new MemoryStream(binData))
+                {
+                    var bmp = new Bitmap(stream);
+                    bmp.Save(pathToImageFile, ImageFormat.Png);
+                    bmp.Dispose();
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public static string ConvertWordToPdf(string path, string fileName)
@@ -78,16 +103,31 @@
             }
         }
 
-        public static bool DownloadFile(string url, string folder, string subFolder)
+        //public static bool DownloadFile(string url, string folder, string subFolder)
+        //{
+        //    try
+        //    {
+        //        string fileName = GetFileNameFromUrl(url);
+
+        //        WebClient webClient = new WebClient();
+        //        webClient.DownloadFile(url, folder + "\\" + subFolder + "\\" + fileName);
+
+        //        return true;    
+        //    }
+        //    catch
+        //    {
+        //        return false;
+        //    }
+        //}
+
+        public static bool DownloadFile(string url, string folder, string subFolder, string fileName)
         {
             try
             {
-                string fileName = GetFileNameFromUrl(url);
-
                 WebClient webClient = new WebClient();
                 webClient.DownloadFile(url, folder + "\\" + subFolder + "\\" + fileName);
 
-                return true;    
+                return true;
             }
             catch
             {

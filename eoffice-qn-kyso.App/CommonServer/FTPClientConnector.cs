@@ -15,6 +15,8 @@
         public string FtpClientRootFolder { get; set; }
         public string UrlBaseFileApi { get; set; }
         public string UrlBaseHoSoCongViecApi { get; set; }
+        public string UrlBaseHeThongApi { get; set; }
+        public string UrlBaseVanBanDiApi { get; set; }
 
         public FTPClientConnector()
         {
@@ -26,6 +28,8 @@
             this.FtpClientFolder = ConfigurationManager.AppSettings.Get("ftpClientFolder");
             this.UrlBaseFileApi = ConfigurationManager.AppSettings.Get("urlBaseFileApi");
             this.UrlBaseHoSoCongViecApi = ConfigurationManager.AppSettings.Get("urlBaseHoSoCongViecApi");
+            this.UrlBaseHeThongApi = ConfigurationManager.AppSettings.Get("urlBaseHeThongApi");
+            this.UrlBaseVanBanDiApi = ConfigurationManager.AppSettings.Get("urlBaseVanBanDiApi");
         }
 
         public bool UploadFile(string fileName)
