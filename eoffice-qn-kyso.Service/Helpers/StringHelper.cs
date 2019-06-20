@@ -26,15 +26,8 @@
         {
             var result = string.Empty;
 
-            if (fileName.IndexOf("signed") < 0)
-            {
-                string[] arrStr = fileName.Split('.');
-                result = String.Concat(arrStr[0], $".signed{number}.", "pdf");
-            }
-            else
-            {
-                result = fileName;
-            }
+            string[] arrStr = fileName.Split('.');
+            result = String.Concat(arrStr[0], $".signed{number}.", "pdf");
 
             return result;
         }
@@ -59,10 +52,11 @@
             
             for (int i=0; i<arrStr.Length; i++)
             {
-                if (arrStr[i].IndexOf('=') >= 0)
+                var index = arrStr[i].IndexOf('=');
+
+                if (index >= 0)
                 {
-                    var arrStr1 = arrStr[i].Split('=');
-                    result.Add(arrStr1[1]);
+                    result.Add(arrStr[i].Substring(index + 1));
                 }
                 else
                 {

@@ -12,6 +12,7 @@
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
 
     public class HoSoCongViecService
     {
@@ -30,17 +31,16 @@
             {
                 var thongTinDuThao = JsonConvert.DeserializeObject<DuThaoDetailDto>(response.Content);
 
-                //var fileDuThaoInfo = JsonConvert.DeserializeObject<FileDuThaoDto>(fileDuThaoResult.ToString());
-
                 return thongTinDuThao.FileDuThao;
             }
 
             return null;
         }
-
-
+        
         public bool UpdateThongTinDuThao(string urlBaseHoSoCongViecApi, string duThaoId, string chucDanhId, string hscvId, long fileId, string yKien, string token)
         {
+            byte[] dataYKien = System.Convert.FromBase64String(yKien);
+
             // Create Object for 
             var fileDuThao = new FileDuThaoInclude
             {
@@ -52,7 +52,7 @@
                 FileDuThao = fileDuThao,
                 LaKySo = true,
                 Ma = "DONG_Y",
-                YKien = yKien
+                YKien = System.Text.Encoding.UTF8.GetString(dataYKien)
             };
 
             var updateXuLyDuThao = new UpdateXuLyDuThaoCmd

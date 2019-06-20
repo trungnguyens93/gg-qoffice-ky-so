@@ -1,19 +1,18 @@
-﻿namespace eoffice_qn_kyso.Service.Helpers
+﻿using eoffice_qn_kyso.Service.Models.Dto;
+using Microsoft.Office.Interop.Word;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RestSharp;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Net;
+using System.Text.RegularExpressions;
+
+namespace eoffice_qn_kyso.Service.Helpers
 {
-    using eoffice_qn_kyso.Service.Models.Dto;
-    using eoffice_qn_kyso.Service.Models.Dto.Command;
-    using eoffice_qn_kyso.Service.Models.Include;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using RestSharp;
-    using Spire.Doc;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.Net;
-    using System.Text.RegularExpressions;
 
     public class FileHelper
     {
@@ -51,16 +50,69 @@
 
         public static string ConvertWordToPdf(string path, string fileName)
         {
-            Document document = new Document();
             try
             {
+                if (fileName.IndexOf(".pdf") >= 0)
+                {
+                    return fileName;
+                }
+
                 var result = string.Empty;
 
                 string[] arrStr = fileName.Split('.');
                 result = String.Concat(arrStr[0], ".", "pdf");
 
-                document.LoadFromFile(path + "\\" + "input" + "\\" + fileName);
-                document.SaveToFile(path + "\\" + "input" + "\\" + result, FileFormat.PDF);
+                // Convert word to PDF
+                // Create a new Microsoft Word application object
+                Microsoft.Office.Interop.Word.Application word = new Microsoft.Office.Interop.Word.Application();
+                word.Visible = false;
+                word.ScreenUpdating = false;
+
+                // C# doesn't have optional arguments so we'll need a dummy value
+                object oMissing = System.Reflection.Missing.Value;
+
+
+                FileInfo wordFile = new FileInfo(path + "\\input\\" + fileName);
+
+                // Cast as Object for word Open method
+                Object filename = (Object)wordFile.FullName;
+
+                // Use the dummy value as a placeholder for optional arguments
+                Microsoft.Office.Interop.Word.Document doc = word.Documents.Open(ref filename, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing, ref oMissing);
+                doc.Activate();
+
+                object fileFormat = WdSaveFormat.wdFormatPDF;
+                object outputFileName;
+                if (wordFile.FullName.IndexOf(".docx") >= 0)
+                {
+                    outputFileName = wordFile.FullName.Replace(".docx", ".pdf");
+                }
+                else
+                {
+                    outputFileName = wordFile.FullName.Replace(".doc", ".pdf");
+                }
+                
+                // Save document into PDF Format
+                doc.SaveAs(ref outputFileName,
+                    ref fileFormat, ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing, ref oMissing);
+
+                // Close the Word document, but leave the Word application open.
+                // doc has to be cast to type _Document so that it will find the
+                // correct Close method.                
+                object saveChanges = WdSaveOptions.wdDoNotSaveChanges;
+                ((_Document)doc).Close(ref saveChanges, ref oMissing, ref oMissing);
+                doc = null;
+
+                // word has to be cast to type _Application so that it will find
+                // the correct Quit method.
+                ((_Application)word).Quit(ref oMissing, ref oMissing, ref oMissing);
+                word = null;
 
                 return result;
             }
