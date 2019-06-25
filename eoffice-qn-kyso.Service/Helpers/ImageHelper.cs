@@ -9,7 +9,7 @@
 
     public class ImageHelper
     {
-        public static iTextSharp.text.Rectangle GetRectPosstionFromPdf(string input, string text)
+        public static iTextSharp.text.Rectangle GetRectPosstionFromPdf(string input, string text, int page)
         {
             if (File.Exists(input))
             {
@@ -17,7 +17,7 @@
 
                 //LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
                 LocationTextExtractionStrategyEx strategy = new LocationTextExtractionStrategyEx(text);
-                string currentText = PdfTextExtractor.GetTextFromPage(reader, 1, strategy);
+                string currentText = PdfTextExtractor.GetTextFromPage(reader, page, strategy);
 
                 if (strategy.myPoints != null && strategy.myPoints.Count > 0)
                 {

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     public class StringHelper
-    {
+    { 
         public static String ConvertInputToOutput(string fileName)
         {
             var result = string.Empty;
@@ -22,18 +22,41 @@
             return result;
         }
 
+        public static String ConvertInputToOutput(string fileName, int number)
+        {
+            var result = string.Empty;
+
+            string[] arrStr = fileName.Split('.');
+            result = String.Concat(arrStr[0], $".signed{number}.", "pdf");
+
+            return result;
+        }
+
+        public static String ConvertFileNameFromWordToPdf(string fileName)
+        {
+            var result = string.Empty;
+
+            string[] arrStr = fileName.Split('.');
+            result = String.Concat(arrStr[0], ".", "pdf");
+
+            return result;
+        }
+
         public static List<string> ReadDataInput(string arg)
         {
             List<string> result = new List<string>(); ;
 
-            var arrStr = arg.Split(':', ';');
+            var strSubTitle = arg.Substring(14);
+
+            var arrStr = strSubTitle.Split(';');
             
-            for (int i=1; i<arrStr.Length; i++)
+            for (int i=0; i<arrStr.Length; i++)
             {
-                if (arrStr[i].IndexOf('=') >= 0)
+                var index = arrStr[i].IndexOf('=');
+
+                if (index >= 0)
                 {
-                    var arrStr1 = arrStr[i].Split('=');
-                    result.Add(arrStr1[1]);
+                    result.Add(arrStr[i].Substring(index + 1));
                 }
                 else
                 {

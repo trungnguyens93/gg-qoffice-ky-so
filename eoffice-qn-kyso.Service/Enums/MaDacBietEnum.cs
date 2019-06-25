@@ -6,7 +6,6 @@
         KyHieuVanBan = 2,
         DiaDiemBanHanh = 3,
         NgayBanHanh = 4,
-        ChuKyCoDau = 5,
-        ChuKyNhay = 6
+        ChuKyCoDau = 5
     }
 }

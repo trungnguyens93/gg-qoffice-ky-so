@@ -34,10 +34,21 @@
     <Reference Include="edXMLConverter">
       <HintPath>packages\edXMLConverter.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Word.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Word.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.6.9.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.6.9\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,15 +62,59 @@
   <ItemGroup>
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="Enums\MaDacBietEnum.cs" />
+    <Compile Include="Helpers\FileHelper.cs" />
+    <Compile Include="Helpers\FolderHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Models\Dto\Command\UpdateBanHanhVanBanDiCmd.cs" />
+    <Compile Include="Models\Dto\Command\UpdateKySoLanhDaoCmd.cs" />
+    <Compile Include="Models\Dto\Command\UpdateKySoVaoSoVanBanDiCmd.cs" />
+    <Compile Include="Models\Dto\DuThaoDetailDto.cs" />
+    <Compile Include="Models\Dto\Command\UpdateXuLyDuThaoCmd.cs" />
+    <Compile Include="Models\Dto\FileDuThaoDto.cs" />
+    <Compile Include="Models\Dto\FileUploadInfoDto.cs" />
+    <Compile Include="Models\Dto\KyHieuVanBanDto.cs" />
+    <Compile Include="Models\Dto\ThongTinNguoiDungDto.cs" />
+    <Compile Include="Models\Dto\VanBanDiDetailDto.cs" />
+    <Compile Include="Models\Include\ChucDanhInclude.cs" />
+    <Compile Include="Models\Include\DoKhanInclude.cs" />
+    <Compile Include="Models\Include\DoMatInclude.cs" />
+    <Compile Include="Models\Include\DonViInclude.cs" />
+    <Compile Include="Models\Include\DonViThuHoiInclude.cs" />
+    <Compile Include="Models\Include\DuThaoThuHoiInclude.cs" />
+    <Compile Include="Models\Include\FileDinhKemInclude.cs" />
+    <Compile Include="Models\Include\FileDuThaoDetailInclude.cs" />
+    <Compile Include="Models\Include\FileDuThaoInclude.cs" />
+    <Compile Include="Models\Include\FileLienQuanInclude.cs" />
+    <Compile Include="Models\Include\HanTraLoiInclude.cs" />
+    <Compile Include="Models\Include\LoaiNghiepVuVanBanInclude.cs" />
+    <Compile Include="Models\Include\LoaiVanBanInclude.cs" />
+    <Compile Include="Models\Include\LuonDuThaoInclude.cs" />
+    <Compile Include="Models\Include\NgonNguInclude.cs" />
+    <Compile Include="Models\Include\NguoiDungInclude.cs" />
+    <Compile Include="Models\Include\SoVanBanInclude.cs" />
+    <Compile Include="Models\Include\ThaoTacInclude.cs" />
+    <Compile Include="Models\Include\ThongTinDuThaoInclude.cs" />
+    <Compile Include="Models\Include\ThongTinHoSoInclude.cs" />
+    <Compile Include="Models\Include\TrangThaiVanBanDiInclude.cs" />
+    <Compile Include="Models\Include\VanBanDiInclude.cs" />
+    <Compile Include="Models\Include\VanBanDiNoiNhanInclude.cs" />
+    <Compile Include="Models\Include\XyLyInclude.cs" />
     <Compile Include="Models\LoaiChuKy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\HoSoCongViecService.cs" />
     <Compile Include="Services\KySoService.cs" />
+    <Compile Include="Services\NguoiDungService.cs" />
+    <Compile Include="Services\VanBanDiService.cs" />
     <Compile Include="TextExtractions\LocationTextExtractionStrategyEx.cs" />
     <Compile Include="TextExtractions\RectAndText.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Dto\Query\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

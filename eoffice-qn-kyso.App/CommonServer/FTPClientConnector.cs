@@ -13,6 +13,10 @@
         public string FtpServerFolder { get; set; }
         public string FtpClientFolder { get; set; }
         public string FtpClientRootFolder { get; set; }
+        public string UrlBaseFileApi { get; set; }
+        public string UrlBaseHoSoCongViecApi { get; set; }
+        public string UrlBaseHeThongApi { get; set; }
+        public string UrlBaseVanBanDiApi { get; set; }
 
         public FTPClientConnector()
         {
@@ -22,37 +26,10 @@
             this.FtpServerFolder = ConfigurationManager.AppSettings.Get("ftpServerFolder");
             this.FtpClientRootFolder = ConfigurationManager.AppSettings.Get("ftpClientRootFolder");
             this.FtpClientFolder = ConfigurationManager.AppSettings.Get("ftpClientFolder");
-        }
-
-        public void CreateTempFolder()
-        {
-            DirectoryInfo directoryInfo = Directory.CreateDirectory(FtpClientRootFolder + FtpClientFolder);
-            directoryInfo.CreateSubdirectory("input");
-            directoryInfo.CreateSubdirectory("output");
-            directoryInfo.CreateSubdirectory("image");
-        }
-
-        public void DeleteTempFolder()
-        {
-            DirectoryInfo directoryInfo = new DirectoryInfo(this.FtpClientRootFolder);
-
-            foreach (var folder in directoryInfo.GetDirectories())
-            {
-                if (folder.Name.Equals(this.FtpClientFolder))
-                {
-                    foreach (var folder2 in folder.GetDirectories())
-                    {
-                        foreach (var file in folder2.GetFiles())
-                        {
-                            file.Delete();
-                        }
-
-                        folder2.Delete();
-                    }
-
-                    folder.Delete();
-                }
-            }
+            this.UrlBaseFileApi = ConfigurationManager.AppSettings.Get("urlBaseFileApi");
+            this.UrlBaseHoSoCongViecApi = ConfigurationManager.AppSettings.Get("urlBaseHoSoCongViecApi");
+            this.UrlBaseHeThongApi = ConfigurationManager.AppSettings.Get("urlBaseHeThongApi");
+            this.UrlBaseVanBanDiApi = ConfigurationManager.AppSettings.Get("urlBaseVanBanDiApi");
         }
 
         public bool UploadFile(string fileName)
@@ -86,7 +63,7 @@
                 throw;
             }
         }
-
+        
         public bool DownloadFile(string fileName)
         {
             try
@@ -109,7 +86,38 @@
             }
             catch
             {
-                throw;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Them tam thoi
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public bool DownloadFileAnh(string fileName)
+        {
+            try
+            {
+                string ftpfullpath = string.Format(@"ftp://{0}/{1}/{2}", this.Host, this.FtpServerFolder, fileName);
+
+                using (WebClient request = new WebClient())
+                {
+                    request.Credentials = new NetworkCredential(this.Username, this.Password);
+                    byte[] fileData = request.DownloadData(ftpfullpath);
+
+                    using (FileStream file = File.Create(this.FtpClientRootFolder + this.FtpClientFolder + "\\" + "image" + "\\" + fileName))
+                    {
+                        file.Write(fileData, 0, fileData.Length);
+                        file.Close();
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

@@ -18,12 +18,12 @@
             registryKey.SetValue("URL Protocol", registryName);
 
             RegistryKey iconRegistryKey = registryKey.CreateSubKey("DefaultIcon");
-            iconRegistryKey.SetValue("", folderRoot + "qoffice_ky_so.App.exe");
+            iconRegistryKey.SetValue("", folderRoot + "eoffice-qn-kyso.App.exe");
 
             RegistryKey shellRegistryKey = registryKey.CreateSubKey("shell");
             RegistryKey openRegistryKey = shellRegistryKey.CreateSubKey("open");
             RegistryKey commandRegistryKey = openRegistryKey.CreateSubKey("command");
-            commandRegistryKey.SetValue("", folderRoot + "qoffice_ky_so.App.exe \"%1\"");
+            commandRegistryKey.SetValue("", folderRoot + "eoffice-qn-kyso.App.exe \"%1\"");
 
             iconRegistryKey.Close();
             commandRegistryKey.Close();
