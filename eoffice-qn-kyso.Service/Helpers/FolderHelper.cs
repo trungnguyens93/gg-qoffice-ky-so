@@ -1,18 +1,16 @@
 ﻿namespace eoffice_qn_kyso.Service.Helpers
 {
-    using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
+    /// <summary>
+    /// Folder helper
+    /// </summary>
     public class FolderHelper
     {
         /// <summary>
         /// Create folder for storing templte files
         /// </summary>
-        public static void CreateTempFolder(string path)
+        public static void CreateProcessFolder(string path)
         {
             DirectoryInfo directoryInfo = Directory.CreateDirectory(path);
             directoryInfo.CreateSubdirectory("input");

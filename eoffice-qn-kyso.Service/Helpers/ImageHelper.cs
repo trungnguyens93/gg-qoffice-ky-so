@@ -1,15 +1,25 @@
 ﻿namespace eoffice_qn_kyso.Service.Helpers
 {
-    using iTextSharp.text.pdf;
-    using iTextSharp.text.pdf.parser;
-    using eoffice_qn_kyso.Service.TextExtractions;
     using System;
     using System.Drawing;
     using System.IO;
+    using iTextSharp.text.pdf;
+    using iTextSharp.text.pdf.parser;
+    using eoffice_qn_kyso.Service.TextExtractions;
 
+    /// <summary>
+    /// Image helper
+    /// </summary>
     public class ImageHelper
     {
-        public static iTextSharp.text.Rectangle GetRectPosstionFromPdf(string input, string text, int page)
+        /// <summary>
+        /// Get position of text from PDF file 
+        /// </summary>
+        /// <param name="input">PDF file</param>
+        /// <param name="text">Text</param>
+        /// <param name="page">Page</param>
+        /// <returns>Position of text</returns>
+        public static iTextSharp.text.Rectangle GetRectPositionFromPdf(string input, string text, int page)
         {
             if (File.Exists(input))
             {
@@ -32,6 +42,15 @@
             return null;
         }
 
+        /// <summary>
+        /// Create a picture
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <param name="font">Font</param>
+        /// <param name="textColor">Text color</param>
+        /// <param name="backColor">Background color</param>
+        /// <param name="backgroundWidth">Background Width</param>
+        /// <returns></returns>
         public static Image DrawText(String text, Font font, Color textColor, Color backColor, int backgroundWidth)
         {
             //first, create a dummy bitmap just to get a graphics object
