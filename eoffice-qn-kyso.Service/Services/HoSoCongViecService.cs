@@ -1,31 +1,25 @@
 ﻿namespace eoffice_qn_kyso.Service.Services
 {
+    using System;
+    using System.Net;
     using eoffice_qn_kyso.Service.Models.Dto;
     using eoffice_qn_kyso.Service.Models.Dto.Command;
     using eoffice_qn_kyso.Service.Models.Include;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using RestSharp;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web;
 
-    public class HoSoCongViecService
+    public class HoSoCongViecService : BaseApiService
     {
-        public FileDuThaoDetailInclude GetThongTinFileDuThao(string urlBaseHoSoCongViecApi, string chucDanhId, string duThaoId, string token)
+        public HoSoCongViecService(string baseUrl, long chucDanhId, string token) : base(baseUrl, chucDanhId, token)
         {
-            var restClient = new RestClient(urlBaseHoSoCongViecApi);
-            var request = new RestRequest($"api/ho-so-cong-viec/du-thao/{duThaoId}", Method.GET);
-            request.AddHeader("X-API-VERSION", "1");
-            request.AddHeader("Authorization", "Bearer " + token);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("chuc-danh-id", chucDanhId);
+        }
 
-            IRestResponse response = restClient.Execute(request);
+        public FileDuThaoDetailInclude GetThongTinFileDuThao(long duThaoId)
+        {
+            this._request.Resource = $"api/ho-so-cong-viec/du-thao/{duThaoId}";
+            this._request.Method = Method.GET;
+
+            IRestResponse response = this._restClient.Execute(this._request);
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
@@ -37,7 +31,7 @@
             return null;
         }
         
-        public bool UpdateThongTinDuThao(string urlBaseHoSoCongViecApi, string duThaoId, string chucDanhId, string hscvId, long fileId, string yKien, string token)
+        public bool UpdateThongTinDuThao(long duThaoId, long hscvId, long fileId, string yKien)
         {
             byte[] dataYKien = System.Convert.FromBase64String(yKien);
 
@@ -60,16 +54,12 @@
                 HoSoCongViecId = Convert.ToInt64(hscvId),
                 XuLy = xuLy
             };
+            
+            this._request.Resource = $"api/ho-so-cong-viec/du-thao/{duThaoId}/xu-ly";
+            this._request.Method = Method.PUT;
+            this._request.AddJsonBody(JsonConvert.SerializeObject(updateXuLyDuThao));
 
-            var restClient = new RestClient(urlBaseHoSoCongViecApi);
-            var request = new RestSharp.RestRequest($"api/ho-so-cong-viec/du-thao/{duThaoId}/xu-ly", Method.PUT);
-            request.AddHeader("X-API-VERSION", "1");
-            request.AddHeader("Authorization", "Bearer " + token);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("chuc-danh-id", chucDanhId);
-            request.AddJsonBody(JsonConvert.SerializeObject(updateXuLyDuThao));
-
-            IRestResponse response = restClient.Execute(request);
+            IRestResponse response = this._restClient.Execute(this._request);
 
             if (response.StatusCode == HttpStatusCode.OK)
             {

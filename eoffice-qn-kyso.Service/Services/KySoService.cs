@@ -72,7 +72,7 @@
                 {
                     pathForImageFile = folderName + "\\image\\" + tenFileChuKy;
 
-                    iTextSharp.text.Rectangle rect = ImageHelper.GetRectPosstionFromPdf(input, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU, numberOfPages);
+                    iTextSharp.text.Rectangle rect = ImageHelper.GetRectPositionFromPdf(input, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU, numberOfPages);
 
                     if (rect == null || (rect != null && rect.Width <= 0 && rect.Height <= 0))
                     {
@@ -99,7 +99,7 @@
 
                     for (int i = 0; i < dsMaDacBiet.Count; i++)
                     {
-                        iTextSharp.text.Rectangle tempRect = ImageHelper.GetRectPosstionFromPdf(input, dsMaDacBiet[i], 1);
+                        iTextSharp.text.Rectangle tempRect = ImageHelper.GetRectPositionFromPdf(input, dsMaDacBiet[i], 1);
 
                         if (tempRect == null || (tempRect != null && tempRect.Width <= 0 && tempRect.Height <= 0))
                         {
@@ -144,7 +144,7 @@
                     }
 
                     // Ky so chu ky co dau cua don vi
-                    iTextSharp.text.Rectangle kySoCoDauRect = ImageHelper.GetRectPosstionFromPdf(input, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU, numberOfPages);
+                    iTextSharp.text.Rectangle kySoCoDauRect = ImageHelper.GetRectPositionFromPdf(input, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU, numberOfPages);
 
                     if (kySoCoDauRect == null || (kySoCoDauRect != null && kySoCoDauRect.Width <= 0 && kySoCoDauRect.Height <= 0))
                     {
@@ -206,7 +206,7 @@
 
                     for (int i = 0; i < dsMaDacBiet.Count; i++)
                     {
-                        iTextSharp.text.Rectangle tempRect = ImageHelper.GetRectPosstionFromPdf(input, dsMaDacBiet[i], 1);
+                        iTextSharp.text.Rectangle tempRect = ImageHelper.GetRectPositionFromPdf(input, dsMaDacBiet[i], 1);
 
                         if (tempRect == null || (tempRect != null && tempRect.Width <= 0 && tempRect.Height <= 0))
                         {
@@ -265,7 +265,7 @@
                         }
                     }
 
-                    iTextSharp.text.Rectangle chuKyCoDauRect = ImageHelper.GetRectPosstionFromPdf(input, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU, numberOfPages);
+                    iTextSharp.text.Rectangle chuKyCoDauRect = ImageHelper.GetRectPositionFromPdf(input, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU, numberOfPages);
 
                     if (chuKyCoDauRect == null || (chuKyCoDauRect != null && chuKyCoDauRect.Width <= 0 && chuKyCoDauRect.Height <= 0))
                     {

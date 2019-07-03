@@ -2,8 +2,16 @@
 {
     using Microsoft.Win32;
 
+    /// <summary>
+    /// Registry Helper
+    /// </summary>
     public class RegistryHelper
     {
+        /// <summary>
+        /// Check registry key
+        /// </summary>
+        /// <param name="registryName"></param>
+        /// <returns></returns>
         public static bool CheckRegistryKey(string registryName)
         {
             RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(registryName);
@@ -11,6 +19,11 @@
             return registryKey != null ? true : false;
         }
 
+        /// <summary>
+        /// Create a registry
+        /// </summary>
+        /// <param name="registryName">Registry Name</param>
+        /// <param name="folderRoot">Folder root</param>
         public static void CreateRegistry(string registryName, string folderRoot)
         {
             RegistryKey registryKey = Registry.ClassesRoot.CreateSubKey(registryName);

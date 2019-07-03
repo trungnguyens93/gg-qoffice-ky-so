@@ -14,28 +14,28 @@
         static void Main(String[] args)
         {
             var registryName = ConfigurationManager.AppSettings.Get("registryName");
-            var folderRoot = ConfigurationManager.AppSettings.Get("ftpClientRootFolder");
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             var hasRegistry = RegistryHelper.CheckRegistryKey(registryName);
 
             if (!hasRegistry)
             {
-                RegistryHelper.CreateRegistry(registryName, folderRoot);
+                RegistryHelper.CreateRegistry(registryName, baseDirectory);
                 return;
             }
 
-            if (args.Length == 0)
-            {
-                return;
-            }
+            //if (args.Length == 0)
+            //{
+            //    return;
+            //}
 
-            //string temp = "qoffice-ky-so:trangThaiKySo=VAN_BAN_DI;giaiDoanKySo=KY_SO_BAN_HANH;noiDung=MjUsMjUvU+G7nyBnaWFvIHRow7RuZyB24bqtbiB04bqjaSxRdeG6o25nIE5hbSxuZ8OgeSAyNCB0aMOhbmcgNiBuxINtIDIwMTk=;duThaoId=;chucDanhId=9;id=298;yKien=;token=eyJ4NXQiOiJNekF6TjJNeVlUY3paakF3TnpWak9HSTRNbVE1TUROaU5HTTRabVZrTmpJM1lUaGpaREkxTWciLCJraWQiOiJNekF6TjJNeVlUY3paakF3TnpWak9HSTRNbVE1TUROaU5HTTRabVZrTmpJM1lUaGpaREkxTWciLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJidXV0aCIsImF1ZCI6ImNOeEt5ZUp3YWZ1X1E1UHAzZlpqNlpKVFRlY2EiLCJuYmYiOjE1NjEzNjg5MzksImF6cCI6ImNOeEt5ZUp3YWZ1X1E1UHAzZlpqNlpKVFRlY2EiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIiwiaXNzIjoiaHR0cHM6XC9cL3Nzby5sZ3NwLmdyZWVuZ2xvYmFsLnZuOjQ0M1wvb2F1dGgyXC90b2tlbiIsImdyb3VwcyI6WyJJbnRlcm5hbFwvZXZlcnlvbmUiLCJhZG1pbiIsIkFwcGxpY2F0aW9uXC9hZG1pbl90cnVjbGllbnRob25nX1BST0RVQ1RJT04iLCJBcHBsaWNhdGlvblwvdmlldC10ZXN0IiwiQXBwbGljYXRpb25cL0FQSV9QVUJMSVNIRVIiLCJBcHBsaWNhdGlvblwvQVBJX1NUT1JFIiwiQXBwbGljYXRpb25cL3Nzb19pcyIsIkFwcGxpY2F0aW9uXC9zc29fYW0iLCJJbnRlcm5hbFwvY3JlYXRvciIsIkFwcGxpY2F0aW9uXC9lb2ZmaWNlLWRldiIsIkFwcGxpY2F0aW9uXC9zc29fZWkiLCJBcHBsaWNhdGlvblwvZW9mZmljZS1sb2NhbCIsIkFwcGxpY2F0aW9uXC9lb2ZmaWNlLXRlc3QyIiwiQXBwbGljYXRpb25cL2VvZmZpY2UtdGVzdDEiXSwiZXhwIjoxNTYxNzI4OTM5LCJpYXQiOjE1NjEzNjg5MzksImp0aSI6IjdkZWNjZDg3LTMzZGEtNDcwMi04NTJkLWQwYzdkYzVjOTU5YiJ9.TmG3Q88OThHp_AhTbhUlgU3EDDt35UZazn2MMFrt6inQzl8zuHkE_U1n4V4loGAPJ-4VpLz1xcinaCr6H5Ig-q9eymVCxav3IQODJN1HcOlNfmpiUzXCucD5EQjwEYLsJESW4DA_rxRoK496VDg1_uCzobAyv3cHD9tXqT4JUdokjFSYkD71NZt4ZTub-LMOCxhrP6PE6_bBbQzPt56GS8gTj_Oz60oJ2sN_GPoWx2uP2aHqwiqIbJxjXvgknZNxT2nJ9FLbpUyvr-JU69I6F5jYv2n_JpIaumajngDDc_7el73_ers0QyOboAwmGAldkNqRYeChvR_4gpBg2B5W5w";
+            string temp = "qoffice-ky-so:trangThaiKySo=VAN_BAN_DI;giaiDoanKySo=KY_SO_BAN_HANH;noiDung=MzYsU0RGU0RGXzM0LFF14bqjbmcgTmFtLG5nw6B5IDMgdGjDoW5nIDcgbsSDbSAyMDE5;duThaoId=;chucDanhId=9;id=348;yKien=;token=eyJ4NXQiOiJNekF6TjJNeVlUY3paakF3TnpWak9HSTRNbVE1TUROaU5HTTRabVZrTmpJM1lUaGpaREkxTWciLCJraWQiOiJNekF6TjJNeVlUY3paakF3TnpWak9HSTRNbVE1TUROaU5HTTRabVZrTmpJM1lUaGpaREkxTWciLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJidXV0aCIsImF1ZCI6ImNOeEt5ZUp3YWZ1X1E1UHAzZlpqNlpKVFRlY2EiLCJuYmYiOjE1NjIxMjc5NzIsImF6cCI6ImNOeEt5ZUp3YWZ1X1E1UHAzZlpqNlpKVFRlY2EiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIiwiaXNzIjoiaHR0cHM6XC9cL3Nzby5sZ3NwLmdyZWVuZ2xvYmFsLnZuOjQ0M1wvb2F1dGgyXC90b2tlbiIsImdyb3VwcyI6WyJJbnRlcm5hbFwvZXZlcnlvbmUiLCJhZG1pbiIsIkFwcGxpY2F0aW9uXC9hZG1pbl90cnVjbGllbnRob25nX1BST0RVQ1RJT04iLCJBcHBsaWNhdGlvblwvdmlldC10ZXN0IiwiQXBwbGljYXRpb25cL0FQSV9QVUJMSVNIRVIiLCJBcHBsaWNhdGlvblwvQVBJX1NUT1JFIiwiQXBwbGljYXRpb25cL3Nzb19pcyIsIkFwcGxpY2F0aW9uXC9zc29fYW0iLCJJbnRlcm5hbFwvY3JlYXRvciIsIkFwcGxpY2F0aW9uXC9lb2ZmaWNlLWRldiIsIkFwcGxpY2F0aW9uXC9zc29fZWkiLCJBcHBsaWNhdGlvblwvZW9mZmljZS1sb2NhbCIsIkFwcGxpY2F0aW9uXC9lb2ZmaWNlLXRlc3QyIiwiQXBwbGljYXRpb25cL2VvZmZpY2UtdGVzdDEiXSwiZXhwIjoxNTYyNDg3OTcyLCJpYXQiOjE1NjIxMjc5NzIsImp0aSI6ImVhMzI3MDU0LWJjYmYtNGY4My05ZWZkLTgyYmU3MzY5NmQxMiJ9.OjjYtU6hsxeIXrbM7E74jYHQcLqEfgzSGs8T_dfvYtXvBXea8LBlU461rRqScZ1XKJuY5I2igw6E1QE1LbCUmaLC6fXAW3ysAPEOtRAblXiRr8tFhUO6PgEHAU79G0r9bPRINWk8nwS4vlVPsGezEI3bfkljtGtdt8TAutHZXpp9yQZpOXEn6fbsdLJVjOx9WOue0U96s-37PJcj2T74z9oRAZZRb_UvWC57RaeR7cpv2m5uULd3fO31aYlgm4fwyG7TP0q1FGzoBpwxN2_c5rCG4BhJ6aKNi-e62os_iUCYor7nZGA3LJTXc93Es3is2CW0xv0tD15AdUBvBZoAWg";
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            string[] arrStr = StringHelper.ReadDataInput(args[0]).ToArray();
-            //string[] arrStr = StringHelper.ReadDataInput(temp).ToArray();
+            //string[] arrStr = StringHelper.ReadDataInput(args[0]).ToArray();
+            string[] arrStr = StringHelper.ReadDataInput(temp).ToArray();
             if (arrStr.Length != 8)
             {
                 return;
