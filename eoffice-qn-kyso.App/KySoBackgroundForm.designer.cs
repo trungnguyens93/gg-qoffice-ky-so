@@ -65,7 +65,7 @@
             // 
             this.niApp.ContextMenuStrip = this.cmtApp;
             this.niApp.Icon = ((System.Drawing.Icon)(resources.GetObject("niApp.Icon")));
-            this.niApp.Text = "notifyIcon1";
+            this.niApp.Text = "Green Gloabal App";
             this.niApp.Visible = true;
             // 
             // lblTitle
@@ -94,6 +94,7 @@
             this.ClientSize = new System.Drawing.Size(457, 137);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblTitle);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "KySoBackgroundForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
