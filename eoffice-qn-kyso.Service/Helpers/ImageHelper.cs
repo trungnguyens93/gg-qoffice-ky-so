@@ -28,6 +28,7 @@
                 //LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
                 LocationTextExtractionStrategyEx strategy = new LocationTextExtractionStrategyEx(text);
                 string currentText = PdfTextExtractor.GetTextFromPage(reader, page, strategy);
+                reader.Dispose();
 
                 if (strategy.myPoints != null && strategy.myPoints.Count > 0)
                 {

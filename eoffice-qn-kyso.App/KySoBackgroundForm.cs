@@ -11,8 +11,6 @@
     public partial class KySoBackgroundForm : Form
     {
         private static Logger _logger = LogManager.GetCurrentClassLogger();
-
-        private readonly string PROCESS_FOLDER_NAME = "SignedFolder";
         
         // Services
         private KySoService _service;
@@ -108,13 +106,15 @@
             var rootFolder = AppDomain.CurrentDomain.BaseDirectory;
 
             this._pathToRootProcessFolder = rootFolder;
-            this._pathToProcessFolder = rootFolder + this.PROCESS_FOLDER_NAME;
+            this._pathToProcessFolder = rootFolder + Constant.FolderName.PROCESS_FOLDER;
         }
 
         private void KySoBackgroundForm_Load(object sender, EventArgs e)
         {
             try
             {
+                _logger.Info("===================================================================================");
+
                 var result = KySo();
                 
                 if (result)
@@ -132,6 +132,8 @@
             }
             finally
             {
+                _logger.Info("===================================================================================\n");
+
                 Application.Exit();
             }
         }
@@ -160,11 +162,9 @@
                 var imageData = string.Empty;
                 bool daKySoLanhDao = true;
 
-                _logger.Info("===================================================================================");
-
                 // 1. Create process folder
                 FolderHelper.CreateProcessFolder(this._pathToProcessFolder);
-                _logger.Info(Constant.TrackingStatus.TAO_THU_MUC_CHUNG);
+                _logger.Info("Tao folder xu ly nghiep vu thanh cong");
 
                 // 2. Get infor from HoSoCongViec|VanBanDi Service
                 if (this._trangThaiKySo.Equals(Constant.TrangThaiKySo.HO_SO_CONG_VIEC))
@@ -177,7 +177,7 @@
                     startInput = fileDuThaoHscvInfo.TenFile;
                     urlFileDuThao = fileDuThaoHscvInfo.Url;
 
-                    _logger.Info(Constant.TrackingStatus.LAY_THONG_TIN_HO_SO_CONG_VIEC);
+                    _logger.Info("Lay thong tin ho so cong viec thanh cong");
                 }
                 else
                 {
@@ -195,7 +195,7 @@
                         this._chucDanhId = vanBanDiInfo.NguoiKy.ChucDanhId;
                     }
 
-                    _logger.Info(Constant.TrackingStatus.LAY_THONG_TIN_VAN_BAN_DI);
+                    _logger.Info("Lay thong tin van ban di thanh cong");
                 }
 
                 // 3.  Download signature file
@@ -205,7 +205,7 @@
                     return false;
                 }
 
-                _logger.Info(Constant.TrackingStatus.DOWNLOAD_FILE_DU_THAO);
+                _logger.Info("Download thanh cong file du thao. FileName la {0}", startInput);
 
                 // 4. Get infor of client base on chucDanhId variable
                 var thongTinChucDanh = _heThongService.GetThongTinChucDanh(this._chucDanhId);
@@ -214,7 +214,11 @@
                     return false;
                 }
 
-                _logger.Info(Constant.TrackingStatus.LAY_THONG_TIN_CHUC_DANH);
+                _logger.Info("Thong tin chuc danh : {0} - {1} - {2} - {3} - {4}", thongTinChucDanh.TenNguoiDung, 
+                                                                                  thongTinChucDanh.TenVaiTro, 
+                                                                                  thongTinChucDanh.TenPhongBan, 
+                                                                                  thongTinChucDanh.TenChucVu, 
+                                                                                  thongTinChucDanh.TenDonVi);
 
                 // 5. Set value for variables using create images file
                 if (this._trangThaiKySo.Equals(Constant.TrangThaiKySo.HO_SO_CONG_VIEC) || (this._trangThaiKySo.Equals(Constant.TrangThaiKySo.VAN_BAN_DI) && this._giaiDoanChuKy.Equals(Constant.GiaiDoanKySo.KY_SO_LANH_DAO)))
@@ -237,7 +241,7 @@
                     return false;
                 }
 
-                _logger.Info(Constant.TrackingStatus.TAO_ANH_KY_SO);
+                _logger.Info("Tao anh xu ly ky so thanh cong");
                 
                 // 8. Convert file from word to pdf and return it's name
                 finalInput = FileHelper.ConvertWordToPdf(this._pathToProcessFolder, startInput);
@@ -246,7 +250,7 @@
                     return false;
                 }
 
-                _logger.Info(Constant.TrackingStatus.CONVERT_WORD_TO_PDF);
+                _logger.Info("Convert word sang pdf (neu co file word) thanh cong");
 
                 // 9. Create name for output file
                 output = StringHelper.ConvertInputToOutput(finalInput);
@@ -258,7 +262,7 @@
                     return false;
                 }
 
-                _logger.Info(Constant.TrackingStatus.KY_SO);
+                _logger.Info("Ky so thanh cong");
 
                 // 11. Update output file after signaturing digital
                 var fileId = _fileService.UploadFile(this._pathToProcessFolder, output, this._duThaoId, this._id, this._yKien);
@@ -267,7 +271,7 @@
                     return false;
                 }
 
-                _logger.Info(Constant.TrackingStatus.UPLOAD_FILE_DU_THAO);
+                _logger.Info("Upload file da ky thanh cong. FileId la {0}", fileId);
 
                 // 12. Update info base on calling service api
                 if (this._trangThaiKySo.Equals(Constant.TrangThaiKySo.HO_SO_CONG_VIEC))
@@ -319,13 +323,11 @@
                     }
                 }
 
-                _logger.Info(Constant.TrackingStatus.CAP_NHAP_THONG_TIN);
+                _logger.Info("Cap nhap thong tin lien quan thanh cong");
 
                 // 13. Delete process folder
-                FolderHelper.DeleteTempFolder(this._pathToRootProcessFolder, this.PROCESS_FOLDER_NAME);
-                _logger.Info(Constant.TrackingStatus.XOA_FOLDER_XU_LU);
-
-                _logger.Info("===================================================================================\n");
+                FolderHelper.DeleteTempFolder(this._pathToRootProcessFolder, Constant.FolderName.PROCESS_FOLDER);
+                _logger.Info("Xoa folder xu ly nghiep vu thanh cong");
 
                 return true;
             }

@@ -4,27 +4,22 @@
 
     public class Constant
     {
+        public static class RegistryName
+        {
+            public static readonly string KY_SO = "qOffice-ky-so";
+        }
+
+        public static class FolderName
+        {
+            public static readonly string PROCESS_FOLDER = "SignedFolder";
+        }
+
         public static class BaseUrl
         {
             public static readonly string HO_SO_CONG_VIEC_API = "baseUrlHoSoCongViecApi";
             public static readonly string VAN_BAN_DI_API = "baseUrlVanBanDiApi";
             public static readonly string HE_THONG_API = "baseUrlHeThongApi";
             public static readonly string FILE_API = "baseUrlFileApi";
-        }
-
-        public static class TrackingStatus
-        {
-            public static readonly string TAO_THU_MUC_CHUNG = "Tao thu muc dung chung";
-            public static readonly string LAY_THONG_TIN_HO_SO_CONG_VIEC = "Lay thogn tin ho so cong viec";
-            public static readonly string LAY_THONG_TIN_VAN_BAN_DI = "Lay thong tin van ban di";
-            public static readonly string DOWNLOAD_FILE_DU_THAO = "Download file du thao";
-            public static readonly string LAY_THONG_TIN_CHUC_DANH = "Lay thong tin chuc danh";
-            public static readonly string TAO_ANH_KY_SO = "Tao anh ky so";
-            public static readonly string CONVERT_WORD_TO_PDF = "Convert word to pdf";
-            public static readonly string KY_SO = "Ky so";
-            public static readonly string UPLOAD_FILE_DU_THAO = "Upload file du thao";
-            public static readonly string CAP_NHAP_THONG_TIN = "Cap nhap thong tin";
-            public static readonly string XOA_FOLDER_XU_LU = "Xoa folder xu ly";
         }
 
         public static class TypeFolder
