@@ -96,6 +96,39 @@
                     var dsMaDacBiet = Constants.Constant.CreateStaticResource();
                     byte[] dataNoiDung = System.Convert.FromBase64String(noiDung);
                     string[] arrStr = System.Text.Encoding.UTF8.GetString(dataNoiDung).Split(',');
+                    
+                    // Ky so chu ky co dau cua don vi
+                    iTextSharp.text.Rectangle kySoCoDauRect = ImageHelper.GetRectPositionFromPdf(input, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU, numberOfPages);
+
+                    if (kySoCoDauRect == null || (kySoCoDauRect != null && kySoCoDauRect.Width <= 0 && kySoCoDauRect.Height <= 0))
+                    {
+                        return false;
+                    }
+                    
+                    // Xoa chu ky co dau neu 
+                    if (!daKySoLanhDao)
+                    {
+                        Image image = ImageHelper.DrawText("", new System.Drawing.Font(DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE), Color.Black, Color.White, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU.Length * 11);
+                        pathForImageFile = folderName + "\\image\\" + "sign_4_" + DateTime.UtcNow.ToString(DEFAULT_FORMAT_DATE_TIME) + DEFAULT_PDF_FILE;
+
+                        using (var bmp = (Bitmap)image)
+                        {
+                            bmp.Save(pathForImageFile, System.Drawing.Imaging.ImageFormat.Png);
+                            bmp.Dispose();
+                        }
+
+                        image.Dispose();
+
+                        width = Constants.Constant.MaDacBiet.CHU_KY_CO_DAU.Length * 7;
+                        height = 16;
+                        leftPoint = (int)kySoCoDauRect.Left;
+                        bottomPoint = (int)kySoCoDauRect.Bottom;
+                        
+                        this.BanHanh(tempInput, tempOutput, pathForImageFile, numberOfPages, leftPoint, bottomPoint, width, height);
+
+                        tempInput = tempOutput;
+                        tempOutput = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo, 1));
+                    }
 
                     for (int i = 0; i < dsMaDacBiet.Count; i++)
                     {
@@ -140,42 +173,9 @@
 
                         // Thay dou ten file input va output
                         tempInput = tempOutput;
-                        tempOutput = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo, i + 1));
-                    }
-
-                    // Ky so chu ky co dau cua don vi
-                    iTextSharp.text.Rectangle kySoCoDauRect = ImageHelper.GetRectPositionFromPdf(input, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU, numberOfPages);
-
-                    if (kySoCoDauRect == null || (kySoCoDauRect != null && kySoCoDauRect.Width <= 0 && kySoCoDauRect.Height <= 0))
-                    {
-                        return false;
+                        tempOutput = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo, i + 2));
                     }
                     
-                    // Xoa chu ky co dau neu 
-                    if (!daKySoLanhDao)
-                    {
-                        Image image = ImageHelper.DrawText("", new System.Drawing.Font(DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE), Color.Black, Color.White, Constants.Constant.MaDacBiet.CHU_KY_CO_DAU.Length * 11);
-                        pathForImageFile = folderName + "\\image\\" + "sign_4_" + DateTime.UtcNow.ToString(DEFAULT_FORMAT_DATE_TIME) + DEFAULT_PDF_FILE;
-
-                        using (var bmp = (Bitmap)image)
-                        {
-                            bmp.Save(pathForImageFile, System.Drawing.Imaging.ImageFormat.Png);
-                            bmp.Dispose();
-                        }
-
-                        image.Dispose();
-
-                        width = Constants.Constant.MaDacBiet.CHU_KY_CO_DAU.Length * 7;
-                        height = 16;
-                        leftPoint = (int)kySoCoDauRect.Left;
-                        bottomPoint = (int)kySoCoDauRect.Bottom;
-                        
-                        this.BanHanh(tempInput, tempOutput, pathForImageFile, numberOfPages, leftPoint, bottomPoint, width, height);
-
-                        tempInput = tempOutput;
-                        tempOutput = string.Concat(folderName, "\\output\\", StringHelper.ConvertInputToOutput(tenFileKySo, 5));
-                    }
-
                     // Chen con dau don vi
                     pathForImageFile = folderName + "\\image\\" + tenFileChuKy;
                     width = 100;
