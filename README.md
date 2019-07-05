@@ -12,5 +12,5 @@ Change some key in app.config
 
 4. Insert a link like this to the href property in a tag
    '''
-   		qOffice-ky-so:filename=FileCongVan.pdf;maDacBiet=#ChuKyNhay;noidung=eoffice;soChuKyNhayDaCo=2
+   		qoffice-ky-so:trangThaiKySo=[TrangThaiKySoEnum];giaiDoanKySo=[GiaiDoanKySoEnum];noiDung=[noiDung];duThaoId=[duThaoId];chucDanhId=[chucDanhId];id=[id];yKien=[yKien];token=[token]
    '''
